@@ -2432,495 +2432,511 @@ var ALL_QUESTIONS = [
   }
 ]
 
+
 // ══════════════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════════════
+
 var questions = [];
 var current = 0;
 var answers = {};
-var mode = 'full';
+var mode = 'realmock';
 var selectedUnits = [];
 var timerInterval = null;
 var timerSeconds = 0;
 var reviewMode = false;
-var savedMode = 'full';
+var savedMode = 'realmock';
 
 var LABELS = ['अ', 'ब', 'क', 'ड'];
-var TIMERS = { full: 90*60, quick: 30*60, unit: 45*60, practice: 0 };
-var MODE_NAMES = { full: 'संपूर्ण परीक्षा', quick: 'जलद सराव', unit: 'युनिट सराव', practice: 'सराव मोड' };
+
+var MODE_NAMES = {
+  realmock : '📝 Real PET Mock',
+  full      : '📚 Question Bank',
+  quick     : '⚡ Quick Fire',
+  unit      : '🎯 Unit Practice',
+  practice  : '🔁 Practice Mode'
+};
 
 // ══════════════════════════════════════════════════════
-//  FLOATING BUTTON HELPERS
+//  TIMER RULES
 // ══════════════════════════════════════════════════════
-function showFloatingStart() {
-  var el = document.getElementById('floating-start');
-  el.style.display = 'block';
-  // Trigger reflow before adding class so transition plays
-  void el.offsetWidth;
-  el.classList.add('visible');
-}
 
-function hideFloatingStart() {
-  var el = document.getElementById('floating-start');
-  el.classList.remove('visible');
-  setTimeout(function() { el.style.display = 'none'; }, 300);
-}
+function getTimerForMode(modeName, totalQuestions) {
 
-// ══════════════════════════════════════════════════════
-//  SCREEN MANAGEMENT
-// ══════════════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(function(s) {
-    s.classList.remove('active');
-    s.style.display = 'none';
-  });
-  var target = document.getElementById(id);
-  target.classList.add('active');
-  target.style.display = 'flex';
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-}
+  switch(modeName) {
 
-// ══════════════════════════════════════════════════════
-//  HOME / MODE SETUP
-// ══════════════════════════════════════════════════════
-var UNIT_INFO = {};
-ALL_QUESTIONS.forEach(function(q) {
-  if (!UNIT_INFO[q.unit]) {
-    UNIT_INFO[q.unit] = {
-      name: q.syllabus_ref.replace(/^युनिट \S+: /, ''),
-      num: q.unit
-    };
+    case 'realmock':
+      return 50 * 60;
+
+    case 'quick':
+      return 15 * 60;
+
+    case 'unit':
+      return totalQuestions * 60;
+
+    case 'practice':
+      return 0;
+
+    case 'full':
+      return 180 * 60;
+
+    default:
+      return 60 * 60;
   }
-});
+}
+
+// ══════════════════════════════════════════════════════
+//  MODE SELECTION
+// ══════════════════════════════════════════════════════
 
 function selectMode(m, cardEl) {
-  mode = m;
-  var unitBox = document.getElementById('unit-selector');
 
-  // Highlight the selected card, unhighlight others
-  document.querySelectorAll('.mode-card').forEach(function(c) {
+  mode = m;
+
+  document.querySelectorAll('.mode-card').forEach(function(c){
     c.classList.remove('selected');
   });
-  if (cardEl) cardEl.classList.add('selected');
 
-  if (m === 'unit') {
-    // Unit mode: show inline selector, hide floating button
-    hideFloatingStart();
+  if(cardEl) cardEl.classList.add('selected');
+
+  var unitBox = document.getElementById('unit-selector');
+
+  if(m === 'unit') {
     unitBox.style.display = 'block';
     buildUnitGrid();
+    hideFloatingStart();
   } else {
-    // Non-unit modes: hide inline selector, show floating start button
     unitBox.style.display = 'none';
     showFloatingStart();
   }
 }
 
+// ══════════════════════════════════════════════════════
+//  UNIT DATA
+// ══════════════════════════════════════════════════════
+
+var UNIT_INFO = {};
+
+ALL_QUESTIONS.forEach(function(q){
+
+  if(!UNIT_INFO[q.unit]) {
+
+    UNIT_INFO[q.unit] = {
+      name : q.syllabus_ref.replace(/^युनिट \S+: /, ''),
+      num  : q.unit
+    };
+  }
+});
+
+// ══════════════════════════════════════════════════════
+//  UNIT GRID
+// ══════════════════════════════════════════════════════
+
 function buildUnitGrid() {
+
   var grid = document.getElementById('unit-grid-btns');
+
   grid.innerHTML = '';
-  var sorted = Object.values(UNIT_INFO).sort(function(a,b) { return a.num - b.num; });
-  sorted.forEach(function(u) {
-    var btn = document.createElement('div');
-    btn.className = 'unit-btn';
-    btn.innerHTML = '<span class="unit-num">' + u.num + '</span>' + u.name;
-    (function(num, el) {
-      el.onclick = function() { toggleUnit(num, el); };
-    })(u.num, btn);
-    grid.appendChild(btn);
-  });
+
+  Object.values(UNIT_INFO)
+    .sort(function(a,b){ return a.num - b.num; })
+    .forEach(function(u){
+
+      var btn = document.createElement('div');
+
+      btn.className = 'unit-btn';
+
+      btn.innerHTML =
+        '<span class="unit-num">' + u.num + '</span>' +
+        u.name;
+
+      btn.onclick = function(){
+        toggleUnit(u.num, btn);
+      };
+
+      grid.appendChild(btn);
+    });
 }
 
 function toggleUnit(num, btn) {
+
   var idx = selectedUnits.indexOf(num);
-  if (idx === -1) { selectedUnits.push(num); btn.classList.add('selected'); }
-  else { selectedUnits.splice(idx, 1); btn.classList.remove('selected'); }
+
+  if(idx === -1) {
+    selectedUnits.push(num);
+    btn.classList.add('selected');
+  } else {
+    selectedUnits.splice(idx,1);
+    btn.classList.remove('selected');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  SMART BALANCED PET MOCK
+// ══════════════════════════════════════════════════════
+
+function generateBalancedMock() {
+
+  var finalQuestions = [];
+
+  for(var unit = 1; unit <= 10; unit++) {
+
+    var unitQuestions = ALL_QUESTIONS.filter(function(q){
+      return q.unit === unit;
+    });
+
+    unitQuestions = shuffle(unitQuestions);
+
+    finalQuestions = finalQuestions.concat(
+      unitQuestions.slice(0,5)
+    );
+  }
+
+  return shuffle(finalQuestions);
 }
 
 // ══════════════════════════════════════════════════════
 //  START EXAM
 // ══════════════════════════════════════════════════════
+
 function startExam() {
-  if (mode === 'unit' && selectedUnits.length === 0) {
-    showModal('कृपया किमान एक युनिट निवडा!', function() {}); return;
+
+  if(mode === 'unit' && selectedUnits.length === 0) {
+
+    showModal('कृपया किमान एक युनिट निवडा!', function(){});
+
+    return;
   }
 
-  // Hide floating button immediately
   hideFloatingStart();
 
   savedMode = mode;
-  var pool = ALL_QUESTIONS.slice();
-  if (mode === 'unit') pool = pool.filter(function(q) { return selectedUnits.indexOf(q.unit) !== -1; });
-  if (mode === 'quick') pool = shuffle(pool).slice(0, 20);
-  else pool = shuffle(pool);
 
-  pool.forEach(function(q) { delete q._shuffledOptions; delete q._correctIndex; });
+  var pool = [];
+
+  // ─────────────────────────────────────────
+  // REAL PET MOCK
+  // ─────────────────────────────────────────
+
+  if(mode === 'realmock') {
+
+    pool = generateBalancedMock();
+  }
+
+  // ─────────────────────────────────────────
+  // FULL QUESTION BANK
+  // ─────────────────────────────────────────
+
+  else if(mode === 'full') {
+
+    pool = shuffle(ALL_QUESTIONS.slice());
+  }
+
+  // ─────────────────────────────────────────
+  // QUICK FIRE
+  // ─────────────────────────────────────────
+
+  else if(mode === 'quick') {
+
+    pool = shuffle(ALL_QUESTIONS.slice()).slice(0,20);
+  }
+
+  // ─────────────────────────────────────────
+  // UNIT PRACTICE
+  // ─────────────────────────────────────────
+
+  else if(mode === 'unit') {
+
+    pool = ALL_QUESTIONS.filter(function(q){
+      return selectedUnits.includes(q.unit);
+    });
+
+    pool = shuffle(pool);
+  }
+
+  // ─────────────────────────────────────────
+  // PRACTICE MODE
+  // ─────────────────────────────────────────
+
+  else if(mode === 'practice') {
+
+    pool = shuffle(ALL_QUESTIONS.slice());
+  }
+
+  // ─────────────────────────────────────────
+  // RESET SHUFFLED OPTIONS
+  // ─────────────────────────────────────────
+
+  pool.forEach(function(q){
+
+    delete q._shuffledOptions;
+    delete q._correctIndex;
+  });
 
   questions = pool;
-  current = 0;
-  answers = {};
-  reviewMode = false;
-  timerSeconds = TIMERS[mode];
 
-  document.getElementById('mode-badge').textContent = MODE_NAMES[mode];
-  document.getElementById('total-q-num').textContent = questions.length;
+  current = 0;
+
+  answers = {};
+
+  reviewMode = false;
+
+  timerSeconds = getTimerForMode(mode, questions.length);
+
+  document.getElementById('mode-badge').textContent =
+    MODE_NAMES[mode];
+
+  document.getElementById('total-q-num').textContent =
+    questions.length;
 
   buildQuestionMap();
+
   renderQuestion();
+
   startTimer();
+
   showScreen('exam-screen');
 }
 
 // ══════════════════════════════════════════════════════
 //  TIMER
 // ══════════════════════════════════════════════════════
+
 function startTimer() {
+
   clearInterval(timerInterval);
+
   var timerBox = document.getElementById('timer-box');
-  if (mode === 'practice') { timerBox.style.display = 'none'; return; }
+
+  if(mode === 'practice') {
+
+    timerBox.style.display = 'none';
+
+    return;
+  }
+
   timerBox.style.display = 'block';
+
   updateTimerDisplay();
-  timerInterval = setInterval(function() {
+
+  timerInterval = setInterval(function(){
+
     timerSeconds--;
+
     updateTimerDisplay();
-    if (timerSeconds <= 0) { clearInterval(timerInterval); submitExam(); }
-  }, 1000);
+
+    if(timerSeconds <= 0) {
+
+      clearInterval(timerInterval);
+
+      submitExam();
+    }
+
+  },1000);
 }
 
 function updateTimerDisplay() {
+
   var m = Math.floor(timerSeconds / 60);
+
   var s = timerSeconds % 60;
+
   document.getElementById('timer-display').textContent =
-    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    String(m).padStart(2,'0') +
+    ':' +
+    String(s).padStart(2,'0');
+
   var box = document.getElementById('timer-box');
+
   box.className = 'timer-box';
-  if (timerSeconds < 300) box.classList.add('danger');
-  else if (timerSeconds < 600) box.classList.add('warning');
-}
 
-// ══════════════════════════════════════════════════════
-//  RENDER QUESTION
-// ══════════════════════════════════════════════════════
-function renderQuestion() {
-  var q = questions[current];
-
-  if (!q._shuffledOptions) {
-    var pairs = q.options.map(function(opt, i) { return { text: opt, originalIndex: i }; });
-    q._shuffledOptions = shuffle(pairs);
-    q._correctIndex = -1;
-    for (var fi = 0; fi < q._shuffledOptions.length; fi++) {
-      if (q._shuffledOptions[fi].originalIndex === q.answer) { q._correctIndex = fi; break; }
-    }
+  if(timerSeconds < 300) {
+    box.classList.add('danger');
   }
 
-  var answered = answers[current] !== undefined;
-
-  document.getElementById('q-syllabus').textContent = q.syllabus_ref;
-  document.getElementById('q-num-badge').textContent = 'Q' + (current + 1);
-  document.getElementById('q-text').textContent = q.question;
-  document.getElementById('curr-q-num').textContent = current + 1;
-
-  var pct = Math.round(((current + 1) / questions.length) * 100);
-  document.getElementById('prog-bar').style.width = pct + '%';
-  document.getElementById('prog-pct').textContent = pct + '%';
-  document.getElementById('btn-prev').disabled = current === 0;
-
-  var nextBtn = document.getElementById('btn-next');
-  nextBtn.textContent = current === questions.length - 1 ? '🏁 शेवट' : 'पुढे ▶';
-
-  var list = document.getElementById('options-list');
-  list.innerHTML = '';
-  q._shuffledOptions.forEach(function(optObj, i) {
-    var btn = document.createElement('button');
-    btn.className = 'option-btn';
-    if (answered || reviewMode) {
-      btn.classList.add('locked');
-      if (i === q._correctIndex) btn.classList.add('correct');
-      else if (i === answers[current]) btn.classList.add('wrong');
-      else btn.classList.add('dimmed');
-    }
-    var labelSpan = document.createElement('span');
-    labelSpan.className = 'opt-label';
-    labelSpan.textContent = LABELS[i];
-    var textSpan = document.createElement('span');
-    textSpan.textContent = optObj.text;
-    btn.appendChild(labelSpan);
-    btn.appendChild(textSpan);
-    if (!answered && !reviewMode) {
-      (function(idx) {
-        btn.addEventListener('click', function() { selectAnswer(idx); });
-      })(i);
-    }
-    list.appendChild(btn);
-  });
-
-  var expBox = document.getElementById('explanation-box');
-  if ((answered || reviewMode) && q.explanation) {
-    var isCorrect = answers[current] === q._correctIndex;
-    expBox.style.display = 'block';
-    expBox.className = 'explanation-box ' + (isCorrect ? 'correct-exp' : 'wrong-exp');
-    var hdr = document.getElementById('exp-header');
-    hdr.className = 'exp-header ' + (isCorrect ? 'correct-h' : 'wrong-h');
-    if (isCorrect) {
-      hdr.innerHTML = '🎉 बरोबर! छान!';
-    } else {
-      hdr.innerHTML = '❌ चुकीचे — योग्य उत्तर: <strong style="color:var(--correct)">' + LABELS[q._correctIndex] + ' — ' + q._shuffledOptions[q._correctIndex].text + '</strong>';
-    }
-    document.getElementById('exp-body').textContent = q.explanation;
-  } else {
-    expBox.style.display = 'none';
+  else if(timerSeconds < 600) {
+    box.classList.add('warning');
   }
-
-  updateMapHighlight();
-  updateMapCount();
 }
 
 // ══════════════════════════════════════════════════════
-//  ANSWER
+//  WEAK UNIT ANALYSIS
 // ══════════════════════════════════════════════════════
-function selectAnswer(optIdx) {
-  if (answers[current] !== undefined || reviewMode) return;
-  answers[current] = optIdx;
-  renderQuestion();
-}
 
-// ══════════════════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════════════════
-function navigate(dir) {
-  current = Math.max(0, Math.min(questions.length - 1, current + dir));
-  renderQuestion();
-}
+function getWeakUnits(unitStats) {
 
-// ══════════════════════════════════════════════════════
-//  QUESTION MAP
-// ══════════════════════════════════════════════════════
-function buildQuestionMap() {
-  var grid = document.getElementById('q-map-grid');
-  grid.innerHTML = '';
-  questions.forEach(function(_, i) {
-    var dot = document.createElement('div');
-    dot.className = 'q-dot';
-    dot.textContent = i + 1;
-    dot.id = 'dot-' + i;
-    (function(idx) {
-      dot.addEventListener('click', function() { current = idx; renderQuestion(); toggleMap(false); });
-    })(i);
-    grid.appendChild(dot);
+  var weak = [];
+
+  Object.keys(unitStats).forEach(function(unit){
+
+    var s = unitStats[unit];
+
+    var pct =
+      Math.round((s.correct / s.total) * 100);
+
+    if(pct < 50) {
+
+      weak.push('युनिट ' + unit);
+    }
   });
-}
 
-function updateMapHighlight() {
-  document.querySelectorAll('.q-dot').forEach(function(d, i) {
-    d.className = 'q-dot';
-    if (answers[i] !== undefined) d.classList.add('answered');
-    if (i === current) d.classList.add('current');
-  });
-}
-
-function updateMapCount() {
-  document.getElementById('map-count').textContent =
-    Object.keys(answers).length + '/' + questions.length;
-}
-
-var mapOpen = false;
-function toggleMap(force) {
-  mapOpen = force !== undefined ? force : !mapOpen;
-  document.getElementById('q-map-panel').style.display = mapOpen ? 'block' : 'none';
-}
-
-// ══════════════════════════════════════════════════════
-//  CUSTOM MODAL
-// ══════════════════════════════════════════════════════
-function showModal(message, onConfirm) {
-  var overlay = document.getElementById('modal-overlay');
-  document.getElementById('modal-msg').textContent = message;
-  overlay.style.display = 'flex';
-
-  var okBtn = document.getElementById('modal-confirm');
-  var cancelBtn = document.getElementById('modal-cancel');
-  var newOk = okBtn.cloneNode(true);
-  var newCancel = cancelBtn.cloneNode(true);
-  okBtn.parentNode.replaceChild(newOk, okBtn);
-  cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
-
-  newOk.addEventListener('click', function() {
-    overlay.style.display = 'none';
-    onConfirm();
-  });
-  newCancel.addEventListener('click', function() {
-    overlay.style.display = 'none';
-  });
-}
-
-// ══════════════════════════════════════════════════════
-//  SUBMIT
-// ══════════════════════════════════════════════════════
-function confirmSubmit() {
-  var remaining = questions.length - Object.keys(answers).length;
-  var msg = remaining > 0
-    ? 'अजून ' + remaining + ' प्रश्न बाकी आहेत. तरीही सबमिट करायचे का?'
-    : 'सर्व प्रश्न पूर्ण झाले आहेत. सबमिट करायचे का?';
-  showModal(msg, function() { submitExam(); });
-}
-
-function submitExam() {
-  clearInterval(timerInterval);
-  showResults();
-}
-
-// ══════════════════════════════════════════════════════
-//  EXIT
-// ══════════════════════════════════════════════════════
-function exitExam() {
-  showModal('टेस्ट सोडून बाहेर पडायचे का? प्रगती जतन होणार नाही.', function() {
-    clearInterval(timerInterval);
-    resetHomeState();
-    showScreen('home-screen');
-  });
+  return weak;
 }
 
 // ══════════════════════════════════════════════════════
 //  RESULTS
 // ══════════════════════════════════════════════════════
+
 function showResults() {
-  var correct = 0, wrong = 0, skip = 0;
+
+  var correct = 0;
+  var wrong   = 0;
+  var skip    = 0;
+
   var unitStats = {};
 
-  questions.forEach(function(q, i) {
-    if (!unitStats[q.unit]) {
+  questions.forEach(function(q, i){
+
+    if(!unitStats[q.unit]) {
+
       unitStats[q.unit] = {
-        total: 0, correct: 0,
-        name: q.syllabus_ref.replace(/^युनिट \S+: /, '')
+        total   : 0,
+        correct : 0,
+        name    : q.syllabus_ref.replace(/^युनिट \S+: /, '')
       };
     }
+
     unitStats[q.unit].total++;
-    if (answers[i] === undefined) {
+
+    if(answers[i] === undefined) {
+
       skip++;
-    } else if (answers[i] === q._correctIndex) {
+    }
+
+    else if(answers[i] === q._correctIndex) {
+
       correct++;
+
       unitStats[q.unit].correct++;
-    } else {
+    }
+
+    else {
+
       wrong++;
     }
   });
 
   var total = questions.length;
-  var pct = Math.round((correct / total) * 100);
 
-  document.getElementById('res-correct').textContent = correct;
-  document.getElementById('res-wrong').textContent = wrong;
-  document.getElementById('res-skip').textContent = skip;
-  document.getElementById('res-pct').textContent = pct + '%';
+  var pct =
+    Math.round((correct / total) * 100);
 
-  var title, sub;
-  if (pct >= 80)      { title = '🏆 उत्कृष्ट!';       sub = 'Luna, तू खूप छान केलेस! PET ला नक्की यश मिळेल 💜'; }
-  else if (pct >= 60) { title = '👍 चांगले!';           sub = 'चांगला प्रयत्न! अजून थोडा सराव करा 💪'; }
-  else if (pct >= 40) { title = '📖 आणखी सराव हवा';    sub = 'हार मानू नका! पुन्हा सराव करा 🌟'; }
-  else                { title = '💡 सुरुवात चांगली';    sub = 'प्रत्येक सराव तुम्हाला मजबूत बनवतो ✨'; }
+  document.getElementById('res-correct').textContent =
+    correct;
 
-  document.getElementById('res-title').textContent = title;
-  document.getElementById('res-sub').textContent = sub;
+  document.getElementById('res-wrong').textContent =
+    wrong;
 
-  var offset = 427 * (1 - pct / 100);
-  var arc = document.getElementById('score-arc');
-  arc.setAttribute('stroke-dashoffset', '427');
-  arc.style.transition = 'none';
-  setTimeout(function() {
-    arc.style.transition = 'stroke-dashoffset 1s ease';
-    arc.setAttribute('stroke-dashoffset', String(offset));
-  }, 150);
+  document.getElementById('res-skip').textContent =
+    skip;
 
-  var barsDiv = document.getElementById('unit-bars');
+  document.getElementById('res-pct').textContent =
+    pct + '%';
+
+  // ─────────────────────────────────────────
+  // WEAK UNIT DISPLAY
+  // ─────────────────────────────────────────
+
+  var weakUnits = getWeakUnits(unitStats);
+
+  var weakHTML = '';
+
+  if(weakUnits.length > 0) {
+
+    weakHTML =
+      '<div style="margin-top:18px;color:#f59e0b;font-size:13px;">' +
+      '⚠️ कमकुवत युनिट्स: ' +
+      weakUnits.join(', ') +
+      '</div>';
+  }
+
+  document.getElementById('res-sub').innerHTML =
+    'तुमची कामगिरी पूर्ण झाली ✨' +
+    weakHTML;
+
+  // ─────────────────────────────────────────
+  // UNIT BARS
+  // ─────────────────────────────────────────
+
+  var barsDiv =
+    document.getElementById('unit-bars');
+
   barsDiv.innerHTML = '';
-  Object.keys(unitStats).sort(function(a,b) { return Number(a) - Number(b); }).forEach(function(unit) {
-    var s = unitStats[unit];
-    var p = Math.round((s.correct / s.total) * 100);
-    var color = p >= 70 ? '#10b981' : p >= 40 ? '#f59e0b' : '#ef4444';
-    var row = document.createElement('div');
-    row.className = 'unit-row';
-    row.innerHTML = '<span class="u-name">युनिट ' + unit + ': ' + s.name + '</span>' +
-      '<div class="u-bar-bg"><div class="u-bar" style="width:' + p + '%;background:' + color + '"></div></div>' +
-      '<span class="u-score">' + s.correct + '/' + s.total + '</span>';
-    barsDiv.appendChild(row);
-  });
+
+  Object.keys(unitStats)
+    .sort(function(a,b){ return Number(a)-Number(b); })
+    .forEach(function(unit){
+
+      var s = unitStats[unit];
+
+      var p =
+        Math.round((s.correct / s.total) * 100);
+
+      var color =
+        p >= 70 ? '#10b981'
+        : p >= 40 ? '#f59e0b'
+        : '#ef4444';
+
+      var row = document.createElement('div');
+
+      row.className = 'unit-row';
+
+      row.innerHTML =
+        '<span class="u-name">युनिट ' +
+        unit +
+        ': ' +
+        s.name +
+        '</span>' +
+
+        '<div class="u-bar-bg">' +
+        '<div class="u-bar" style="width:' +
+        p +
+        '%;background:' +
+        color +
+        '"></div></div>' +
+
+        '<span class="u-score">' +
+        s.correct +
+        '/' +
+        s.total +
+        '</span>';
+
+      barsDiv.appendChild(row);
+    });
 
   showScreen('result-screen');
 }
 
-function reviewAnswers() {
-  reviewMode = true;
-  current = 0;
-  document.getElementById('timer-box').style.display = 'none';
-  document.getElementById('mode-badge').textContent = '🔍 उत्तर तपासणी';
-  renderQuestion();
-  showScreen('exam-screen');
-}
-
 // ══════════════════════════════════════════════════════
-//  RESET & HOME
+//  SHUFFLE
 // ══════════════════════════════════════════════════════
-function resetHomeState() {
-  clearInterval(timerInterval);
-  questions = [];
-  answers = {};
-  current = 0;
-  reviewMode = false;
-  selectedUnits = [];
-  mode = 'full';
 
-  // Hide floating button (no animation, instant)
-  var fl = document.getElementById('floating-start');
-  fl.classList.remove('visible');
-  fl.style.display = 'none';
-
-  // Hide unit selector
-  document.getElementById('unit-selector').style.display = 'none';
-
-  // Clear card selection highlights
-  document.querySelectorAll('.mode-card').forEach(function(c) {
-    c.classList.remove('selected');
-  });
-
-  toggleMap(false);
-}
-
-function goHome() {
-  resetHomeState();
-  showScreen('home-screen');
-}
-
-function retryExam() {
-  mode = savedMode;
-  startExam();
-}
-
-// ══════════════════════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════════════════════
 function shuffle(arr) {
+
   var a = arr.slice();
-  for (var i = a.length - 1; i > 0; i--) {
+
+  for(var i = a.length - 1; i > 0; i--) {
+
     var j = Math.floor(Math.random() * (i + 1));
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+
+    var tmp = a[i];
+
+    a[i] = a[j];
+
+    a[j] = tmp;
   }
+
   return a;
 }
 
-// ══════════════════════════════════════════════════════
-//  EVENT BINDING
-// ══════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', function() {
-  document.addEventListener('click', function(e) {
-    if (mapOpen &&
-        !e.target.closest('#q-map-panel') &&
-        !e.target.closest('#map-toggle')) {
-      toggleMap(false);
-    }
-  });
-});
 </script>
-
-</body>
-</html>
