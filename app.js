@@ -522,14 +522,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function selectPaper(paper) {
-  if (paper === 1) {
-  currentQuestionBank = ALL_QUESTIONS;
-  document.getElementById('home-screen-title').innerHTML = 'पेपर १ – संशोधन पद्धती';
-  showScreen('home-screen');
+if (paper === 1) {
+  document.getElementById('home-screen-title').innerText = 'पेपर १ – संशोधन पद्धती';
+  document.getElementById('home-paper-subtitle').innerHTML = '';
 } else if (paper === 2) {
-  currentQuestionBank = PAPER2_QUESTIONS;
-  document.getElementById('home-screen-title').innerHTML = 'पेपर २ – शिक्षण <span style="font-size:0.7em;">(PET-10 सोलापूर विद्यापीठ)</span>';
-  showScreen('home-screen');
+  document.getElementById('home-screen-title').innerText = 'पेपर २ – शिक्षण';
+  document.getElementById('home-paper-subtitle').innerHTML = 'PET-10 सोलापूर विद्यापीठ';
 }
 }
 
