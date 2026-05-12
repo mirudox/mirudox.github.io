@@ -562,23 +562,26 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
 
 .paper-select-grid {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 380px;
-  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
 .paper-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px 20px;
+  flex: 1 1 280px;          /* at least 280px wide, can grow */
+  background: rgba(26, 21, 48, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 28px;
+  padding: 2rem 1.5rem;
+  transition: all 0.3s ease;
   cursor: pointer;
-  transition: all 0.25s ease;
   text-align: center;
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 .paper-card::before {
@@ -594,8 +597,10 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
 }
 
 .paper-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-6px);
   border-color: var(--accent);
+  box-shadow: 0 12px 30px rgba(124,58,237,0.4);
+  background: rgba(34, 29, 58, 0.9);
 }
 
 .paper-card:hover::before {
@@ -603,21 +608,22 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
 }
 
 .paper-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
+  font-size: 3.5rem;
+  margin-bottom: 0.75rem;
+  display: inline-block;
 }
 
 .paper-card h3 {
-  font-size: 18px;
+  font-size: 1.4rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 0.5rem;
   background: linear-gradient(135deg, #e2e8f0, var(--accent3));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .paper-card p {
-  font-size: 12px;
+  font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0;
 }
