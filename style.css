@@ -45,15 +45,17 @@ flex-direction: column;
 
 /* ── HOME ── */
 #home-screen {
-align-items: center;
-justify-content: center;
-padding: 40px 20px;
-text-align: center;
-background:
-radial-gradient(ellipse 80% 50% at 20% 10%, rgba(124,58,237,0.15) 0%, transparent 60%),
-radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167,139,250,0.10) 0%, transparent 55%);
-padding-bottom: 120px;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  padding-top: 80px;        /* ← add this line */
+  padding-bottom: 120px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(124,58,237,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167,139,250,0.10) 0%, transparent 55%);
 }
+
 
 .logo-ring {
 width: 100px; height: 100px;
