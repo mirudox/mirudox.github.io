@@ -587,17 +587,20 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
   border: 1px solid var(--border);
   border-radius: 30px;
   padding: 8px 16px;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
-  z-index: 100;
-  transition: all 0.2s;
-  display: flex;
+  z-index: 1000; /* High z-index to stay on top */
+  transition: all 0.2s ease;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  backdrop-filter: blur(4px);
 }
 
 .back-to-papers:hover {
   border-color: var(--accent);
   color: var(--accent3);
+  background: var(--surface2);
 }
