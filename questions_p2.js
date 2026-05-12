@@ -1,5 +1,4 @@
 const PAPER2_QUESTIONS = [
-  // Unit 1: Educational Studies (16 questions)
   {
     "unit": 1,
     "syllabus_ref": "युनिट १: शैक्षणिक अभ्यास – निसर्गवाद",
@@ -128,7 +127,7 @@ const PAPER2_QUESTIONS = [
     "answer": 1,
     "explanation": "पुनर्चनावादाचे उद्दिष्ट समाज सुधारणेसाठी सामाजिक परिवर्तन घडवणे आहे."
   },
-  // Unit 3: Learner and Learning Process (9 questions)
+  // Unit 3: 9 questions
   {
     "unit": 3,
     "syllabus_ref": "युनिट ३: मानसशास्त्रीय पद्धती",
@@ -201,7 +200,7 @@ const PAPER2_QUESTIONS = [
     "answer": 1,
     "explanation": "पियाजे यांनी बौद्धिक विकासाचे वयाशी बांधलेले टप्पे सांगितले."
   },
-  // Unit 6: Research in Education (8 questions)
+  // Unit 6: 8 questions
   {
     "unit": 6,
     "syllabus_ref": "युनिट ६: संशोधन प्रकार",
@@ -218,7 +217,6 @@ const PAPER2_QUESTIONS = [
     "answer": 1,
     "explanation": "लिकर्ट पद्धतीने अभिवृत्ती मोजण्यासाठी प्रश्नावली बनविली जाते."
   },
-  // Q28 tricky but keep as given
   {
     "unit": 6,
     "syllabus_ref": "युनिट ६: प्रायोगिक अभिकल्प – अंतर्गत सप्रमाणता",
@@ -267,7 +265,7 @@ const PAPER2_QUESTIONS = [
     "answer": 3,
     "explanation": "निबंधवजा चाचणी असंघटीत असते; तिचे उत्तर स्वरूप निश्चित नसते."
   },
-  // Unit 9: Management, Administration (4 questions)
+  // Unit 9: 4 questions
   {
     "unit": 9,
     "syllabus_ref": "युनिट ९: पर्यवेक्षण",
@@ -300,7 +298,7 @@ const PAPER2_QUESTIONS = [
     "answer": 2,
     "explanation": "एल्टन मायो व हॉथॉर्न अभ्यास यांनी मानवी संबंध दृष्टिकोन प्रस्तावित केला."
   },
-  // Unit 7: Assessment (2 questions)
+  // Unit 7: 2 questions
   {
     "unit": 7,
     "syllabus_ref": "युनिट ७: मूल्यमापन – ग्रेडिंग",
@@ -317,7 +315,7 @@ const PAPER2_QUESTIONS = [
     "answer": 2,
     "explanation": "नाट्यीकरण (भूमिका-नाट्य) ही एक अनुकरण (सिम्युलेशन) पद्धत आहे."
   },
-  // Unit 8: Technology (3 questions)
+  // Unit 8: 3 questions
   {
     "unit": 8,
     "syllabus_ref": "युनिट ८: शैक्षणिक तंत्रज्ञान",
@@ -342,7 +340,7 @@ const PAPER2_QUESTIONS = [
     "answer": 3,
     "explanation": "स्किनरचा साधक अभिसंधान (operant conditioning) सिद्धांत अभिक्रमित अध्ययनाचा पाया आहे."
   },
-  // Unit 10: Inclusive Education (4 questions)
+  // Unit 10: 4 questions
   {
     "unit": 10,
     "syllabus_ref": "युनिट १०: कायदे – आरसीआय कायदा १९९२",
@@ -375,7 +373,7 @@ const PAPER2_QUESTIONS = [
     "answer": 3,
     "explanation": "गुन्हेगार मुले सामाजिकदृष्ट्या अपवादात्मक असतात – त्यांचे वर्तन समाजविरोधी असते."
   },
-  // Unit 2: Policies (1 question) and Unit 4: Teacher Education (3 questions)
+  // Unit 2: 1 question
   {
     "unit": 2,
     "syllabus_ref": "युनिट २: NPE 1986 – नवोदय विद्यालय",
@@ -384,6 +382,7 @@ const PAPER2_QUESTIONS = [
     "answer": 0,
     "explanation": "नवोदय विद्यालये ग्रामीण भागातील प्रतिभावान विद्यार्थ्यांसाठी स्थापन करण्यात आली."
   },
+  // Unit 4: 3 questions
   {
     "unit": 4,
     "syllabus_ref": "युनिट ४: शिक्षक शिक्षण – यूजीसी एचआरडीसी",
