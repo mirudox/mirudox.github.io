@@ -126,6 +126,7 @@ function startExam() {
 
   hideFloatingStart();
   savedMode = mode;
+  window._bittuEncouraged = false;
 
   var pool = currentQuestionBank.slice();
 
@@ -282,6 +283,16 @@ if (current === questions.length - 1) {
 function selectAnswer(optIdx) {
   if (answers[current] !== undefined || reviewMode) return;
   answers[current] = optIdx;
+    // New: check if 80% of questions are answered
+  var answeredCount = Object.keys(answers).length;
+  var total = questions.length;
+  if (total && (answeredCount / total) >= 0.8) {
+    // Only trigger once per exam session
+    if (!window._bittuEncouraged) {
+      window._bittuEncouraged = true;
+      if (typeof showExamBittu === 'function') showExamBittu();
+    }
+  }
   renderQuestion();
 }
 
