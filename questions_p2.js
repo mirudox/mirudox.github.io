@@ -1,407 +1,416 @@
 const PAPER2_QUESTIONS = [
+  // Unit 1: Educational Studies (16 questions)
   {
-    "question": "The school held the view, 'God makes all things good; man meddles with and they became evil?'\nदेव सर्व गोष्टी चांगल्या बनवतो; मानव मध्यस्थी करतो व ते राक्षस बनते' हे मत संप्रदायाचे आहे.",
-    "options": ["Marxism\nमाक्सवाद", "Naturalism\nनिसर्गवाद", "Pragmatism\nकार्यवाद", "Existentialism\nअस्तित्ववाद"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: शैक्षणिक अभ्यास – निसर्गवाद",
+    "question": "देव सर्व गोष्टी चांगल्या बनवतो; मानव मध्यस्थी करतो व ते राक्षस बनते – हे मत कोणत्या संप्रदायाचे आहे?",
+    "options": ["माक्सवाद", "निसर्गवाद", "कार्यवाद", "अस्तित्ववाद"],
     "correct": 1,
-    "explanation": "Naturalism believes nature is inherently good; society corrupts. This is Rousseau's view.",
-    "syllabus_ref": "युनिट 1: Naturalism",
-    "unit": 1
+    "explanation": "योग्य उत्तर: निसर्गवाद. रुसो यांनी निसर्ग माणसाला चांगला बनवतो, समाज दूषित करतो असे मानले."
   },
   {
-    "question": "Rousseau is specially associated with …...... term.\nरुसो ...... या विशेष संसेशी संलग्नित आहे.",
-    "options": ["Gifts\nपारितोषिक", "Formal education\nऔपचारिक शिक्षण", "Back to nature\nनिसर्गाकडे चला", "Moral values\nनैतिक मूल्ये"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: निसर्गवाद",
+    "question": "रुसो हे कोणत्या संकल्पनेशी विशेषतः संलग्नित आहेत?",
+    "options": ["पारितोषिके", "औपचारिक शिक्षण", "निसर्गाकडे चला", "नैतिक मूल्ये"],
     "correct": 2,
-    "explanation": "Rousseau advocated 'Back to nature' in his educational philosophy.",
-    "syllabus_ref": "युनिट 1: Naturalism",
-    "unit": 1
+    "explanation": "'निसर्गाकडे चला' ही रुसोची प्रसिद्ध संकल्पना आहे."
   },
   {
-    "question": "Swami Vivekananda name is associated with ..........\nस्वामी विवेकानंद हे नाव -शी संलग्नित आहे.",
-    "options": ["Integrated education\nएकात्मिक शिक्षण", "Individualism\nव्यक्तिगत वाद", "Craft centered education\nहस्तकला केंद्रित शिक्षण", "Man-making education\nमानव निर्माण शिक्षण"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: स्वामी विवेकानंद",
+    "question": "स्वामी विवेकानंद यांचे नाव कोणत्या संकल्पनेशी संलग्नित आहे?",
+    "options": ["एकात्मिक शिक्षण", "व्यक्तिगतवाद", "हस्तकला केंद्रित शिक्षण", "मानव निर्माण शिक्षण"],
     "correct": 3,
-    "explanation": "Vivekananda propounded 'Man-making education' – manifestation of inner perfection.",
-    "syllabus_ref": "युनिट 1: विवेकानंद",
-    "unit": 1
+    "explanation": "विवेकानंदांनी 'मानव निर्माण शिक्षण' – माणसातील परिपूर्णता प्रकट करणारे शिक्षण – मांडले."
   },
   {
-    "question": "...... elements was not given due importance in basic education.\nमूलभूत शिक्षणामध्ये - या घटकास महत्व दिले जात नाही.",
-    "options": ["Craft\nहस्तकला", "Literature\nसाहित्य", "Correlation\nसहसंबंध", "Self-sufficiency\nस्व-पूरकता"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: महात्मा गांधी – मूलभूत शिक्षण",
+    "question": "मूलभूत शिक्षणामध्ये कोणत्या घटकास महत्त्व दिले जात नाही?",
+    "options": ["हस्तकला", "साहित्य", "सहसंबंध", "स्व-पूरकता"],
     "correct": 1,
-    "explanation": "Gandhi's Basic Education emphasised craft, correlation, self-sufficiency, but not literature.",
-    "syllabus_ref": "युनिट 1: गांधी",
-    "unit": 1
+    "explanation": "गांधीजींच्या मूलभूत शिक्षणात हस्तकला, सहसंबंध व स्वपूरकता होती; साहित्याला कमी महत्त्व होते."
   },
   {
-    "question": "...... said “education is the creation of a sound mind in a sound body”.\nसशक्त शरीरात सशक्त मनाची निर्मिती शिक्षणाने होते' असे ---- म्हणतो.",
-    "options": ["Dewey\nड्यूई", "Froebel\nफ्रोबेल", "Aristotle\nअॅरिस्टोटल", "Herbert Spencer\nहर्बट स्पेंसर"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: अॅरिस्टॉटल",
+    "question": "'सशक्त शरीरात सशक्त मनाची निर्मिती शिक्षणाने होते' असे कोण म्हणतो?",
+    "options": ["ड्यूई", "फ्रोबेल", "अॅरिस्टॉटल", "हर्बट स्पेन्सर"],
     "correct": 2,
-    "explanation": "Aristotle stated this famous dictum linking physical and mental development.",
-    "syllabus_ref": "युनिट 1: Aristotle",
-    "unit": 1
+    "explanation": "अॅरिस्टॉटल यांचे हे प्रसिद्ध विधान आहे – शारीरिक व मानसिक विकास एकमेकांशी जोडलेले आहेत."
   },
   {
-    "question": "Religious education is strongly advocated by ..........\nधार्मिक शिक्षणास - हे भक्कम पाठिंबा देतात.",
-    "options": ["Realist\nवास्तववादी", "Existentialists\nअस्तित्ववादी", "Idealists\nआदर्शवादी", "Pragmatists\nकार्यवादी"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: आदर्शवाद",
+    "question": "धार्मिक शिक्षणाला कोणत्या तत्त्वज्ञानाचे जोरदार समर्थन आहे?",
+    "options": ["वास्तववादी", "अस्तित्ववादी", "आदर्शवादी", "कार्यवादी"],
     "correct": 2,
-    "explanation": "Idealists (Plato, Hegel) give highest place to spiritual and moral values, thus advocate religious education.",
-    "syllabus_ref": "युनिट 1: Idealism",
-    "unit": 1
+    "explanation": "आदर्शवादी (प्लेटो, हेगेल) आध्यात्मिक मूल्यांवर भर देतात, म्हणून धार्मिक शिक्षणाचे समर्थन करतात."
   },
   {
-    "question": "...... philosophy maintained “The soul is divine, only held in the bondage of matter”.\n“आत्मा दैवी आहे, केवळ पदार्थाच्या बंधनात असतो” असे तत्वज्ञान - पाळतात.",
-    "options": ["Jainism\nजैन पंथ", "Buddhism\nबौद्ध पंथ", "Sankhya\nसांख्या", "Vedanta\nवेदांत"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: वेदांत",
+    "question": "‘आत्मा दैवी आहे, केवळ पदार्थाच्या बंधनात असतो’ – हे कोणत्या तत्त्वज्ञानाचे मत आहे?",
+    "options": ["जैन", "बौद्ध", "सांख्य", "वेदांत"],
     "correct": 3,
-    "explanation": "Vedanta (Advaita) says Atman is divine but trapped by Maya (matter).",
-    "syllabus_ref": "युनिट 1: Vedanta",
-    "unit": 1
+    "explanation": "वेदांत (अद्वैत) नुसार आत्मा दैवी आहे पण मायेच्या बंधनात सापडलेला आहे."
   },
   {
-    "question": "Transcendental self is related to ...........\nआध्यात्मिक स्व - शी संबंधित आहे.",
-    "options": ["Pragmatism\nकार्यवाद", "Naturalism\nनिसर्गवाद", "Realism\nवास्तववाद", "Idealism\nआदर्शवाद"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: आदर्शवाद",
+    "question": "‘आध्यात्मिक स्व’ ही संकल्पना कोणत्या तत्त्वज्ञानाशी संबंधित आहे?",
+    "options": ["कार्यवाद", "निसर्गवाद", "वास्तववाद", "आदर्शवाद"],
     "correct": 3,
-    "explanation": "Idealism believes in a transcendental self beyond physical existence.",
-    "syllabus_ref": "युनिट 1: Idealism",
-    "unit": 1
+    "explanation": "आदर्शवाद आध्यात्मिक स्व (transcendental self) वर विश्वास ठेवतो."
   },
   {
-    "question": "A society is a network of ......\nसमाज हे --- चे जाळे आहे.",
-    "options": ["Socio-political relationship\nसामाजिक-राजकीय संबंध", "Social attitude\nसामाजिक अभिवृत्ती", "Inter-personal relationships\nआंतर वैयक्तिक संबंध", "Religious-cultural attitudes\nधार्मिक - सांस्कृतिक अभिवृत्ती"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: समाजशास्त्र",
+    "question": "समाज हे कशाचे जाळे आहे?",
+    "options": ["सामाजिक-राजकीय संबंध", "सामाजिक अभिवृत्ती", "आंतर-वैयक्तिक संबंध", "धार्मिक-सांस्कृतिक अभिवृत्ती"],
     "correct": 2,
-    "explanation": "Sociologically, society is a web of inter-personal relationships (MacIver & Page).",
-    "syllabus_ref": "युनिट 1: समाजशास्त्र",
-    "unit": 1
+    "explanation": "समाजशास्त्रानुसार, समाज हा आंतर-वैयक्तिक संबंधांचे जाळे आहे (मॅकायव्हर व पेज)."
   },
   {
-    "question": "...... is not characteristic of culture.\nसंस्कृतिचे हे गुणवैशिष्ट्ये नाही.",
-    "options": ["It is biologically inherited\nजैविकरित्या वारसा असणे", "It is changeable\nपरिवर्तनशील असणे", "It is abstract\nअमूर्त असणे", "It is transmitted from generation\nपिढ्यापासून प्रसारित असणे"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: संस्कृती",
+    "question": "संस्कृतीचे खालीलपैकी कोणते वैशिष्ट्य नाही?",
+    "options": ["जैविकरित्या वारसा असणे", "परिवर्तनशील असणे", "अमूर्त असणे", "पिढ्यापासून प्रसारित असणे"],
     "correct": 0,
-    "explanation": "Culture is learned (socially transmitted), not biologically inherited.",
-    "syllabus_ref": "युनिट 1: संस्कृती",
-    "unit": 1
+    "explanation": "संस्कृती शिकवली जाते, ती जैविकरित्या वारशाने मिळत नाही."
   },
   {
-    "question": "According to Talcott Parson, social change deals with .......\nटेलकॉट पर्सन यांच्या मते, सामाजिक बदल हा ------- शी संबंधित असतो.",
-    "options": ["Cultural revolution\nसांस्कृतिक क्रांती", "Functional needs of the society\nसमाजाच्या कार्यात्मक गरजा", "Economic upliftment\nआर्थिक उत्थान", "Spiritual upliftment\nआध्यात्मिक उत्थान"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: टॅलकॉट पार्सन्स – सामाजिक बदल",
+    "question": "टॅलकॉट पार्सन्स यांच्या मते, सामाजिक बदल हा कशाशी संबंधित असतो?",
+    "options": ["सांस्कृतिक क्रांती", "समाजाच्या कार्यात्मक गरजा", "आर्थिक उत्थान", "आध्यात्मिक उत्थान"],
     "correct": 1,
-    "explanation": "Parsons (structural functionalist) believed social change occurs due to functional needs.",
-    "syllabus_ref": "युनिट 1: सामाजिक बदल – Talcott Parsons",
-    "unit": 1
+    "explanation": "पार्सन्स (रचनात्मक कार्यवादी) यांच्या मते सामाजिक गरजांमुळे बदल होतो."
   },
   {
-    "question": "...... is not a characteristic of modernization.\nआधुनिकीकरणाचे - हे गुणवैशिष्ट्य नाही.",
-    "options": ["Empathy\nसहानुभूती", "Mobility\nगतीशीलता", "Participation\nसहभागी", "Religious faith\nधार्मिक श्रद्धा"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: आधुनिकीकरण",
+    "question": "आधुनिकीकरणाचे खालीलपैकी कोणते वैशिष्ट्य नाही?",
+    "options": ["सहानुभूती", "गतीशीलता", "सहभाग", "धार्मिक श्रद्धा"],
     "correct": 3,
-    "explanation": "Modernisation includes empathy, mobility, participation – but not necessarily religious faith (can be traditional).",
-    "syllabus_ref": "युनिट 1: आधुनिकीकरण",
-    "unit": 1
+    "explanation": "आधुनिकीकरणात सहानुभूती, गतिशीलता, सहभाग येतो; धार्मिक श्रद्धा ही परंपरागत असू शकते."
   },
   {
-    "question": "The social heritage of the people could be described by ............... of the following term.\nखालीलपैकी .................... ही संज्ञा व्यक्तित्वा समाजिक वारसाचे वर्णन करते.",
-    "options": ["Culture\nसंस्कृती", "Transmission\nप्रसारण", "Social norms\nसामाजिक नियम", "Human involvement\nमानवी सहभाग"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: संस्कृती",
+    "question": "एखाद्या समाजाचा सामाजिक वारसा कोणत्या संज्ञेने ओळखला जातो?",
+    "options": ["संस्कृती", "प्रसारण", "सामाजिक नियम", "मानवी सहभाग"],
     "correct": 0,
-    "explanation": "Culture is the social heritage – all learned behaviour, beliefs, customs.",
-    "syllabus_ref": "युनिट 1: संस्कृती",
-    "unit": 1
+    "explanation": "संस्कृती म्हणजे समाजाचा सामाजिक वारसा – सर्व शिकलेले वर्तन, विश्वास, रीतीरिवाज."
   },
   {
-    "question": "Cultural change is ..........\nसांस्कृतिक बदल हे - असतात.",
-    "options": ["A universal phenomena\nवैश्विक घटना", "Restricted to developed society\nविकसित समाजापूरते प्रतिबंधित", "Restricted to primitive society\nप्राचीन समाजापूरते प्रतिबंधित", "An illusion\nएक भ्रम"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: सांस्कृतिक बदल",
+    "question": "सांस्कृतिक बदल हा ………… असतो.",
+    "options": ["वैश्विक घटना", "केवळ विकसित समाजापुरता मर्यादित", "केवळ प्राचीन समाजापुरता मर्यादित", "एक भ्रम"],
     "correct": 0,
-    "explanation": "Cultural change occurs in all societies – it is universal.",
-    "syllabus_ref": "युनिट 1: सांस्कृतिक बदल",
-    "unit": 1
+    "explanation": "सांस्कृतिक बदल प्रत्येक समाजात होतो – तो वैश्विक घटना आहे."
   },
   {
-    "question": "...... is not a factor of social change.\n- हा सामाजिक परिवर्तनाचा घटक नाही.",
-    "options": ["Technological development\nतांत्रिक विकास", "Biological change\nजैविक बदल", "Tolerance\nसहनशीलता", "Political change\nराजकीय बदल"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: सामाजिक बदलाचे घटक",
+    "question": "सामाजिक बदलाचा पुढीलपैकी कोणता घटक नाही?",
+    "options": ["तांत्रिक विकास", "जैविक बदल", "सहनशीलता", "राजकीय बदल"],
     "correct": 2,
-    "explanation": "Tolerance is a value, not typically a direct factor of social change.",
-    "syllabus_ref": "युनिट 1: सामाजिक बदल – घटक",
-    "unit": 1
+    "explanation": "सहनशीलता हे मूल्य आहे, ते सामाजिक बदलाचा थेट घटक नाही."
   },
   {
-    "question": "In the social context, through the application of reconstructionism ....... can be achieved.\nसामाजिक संदर्भात, पुनर्चना वादाचा उपयोग करून --- साध्य करता येते.",
-    "options": ["Social control\nसामाजिक नियंत्रण", "Social change\nसामाजिक परिवर्तन", "Social stratification\nसामाजिक स्तरीकरण", "Social mobility\nसामाजिक गतीशीलता"],
+    "unit": 1,
+    "syllabus_ref": "युनिट १: पुनर्चनावाद",
+    "question": "सामाजिक संदर्भात पुनर्चनावादाचा वापर करून काय साध्य करता येते?",
+    "options": ["सामाजिक नियंत्रण", "सामाजिक परिवर्तन", "सामाजिक स्तरीकरण", "सामाजिक गतिशीलता"],
     "correct": 1,
-    "explanation": "Reconstructionism aims at social change to build a better society.",
-    "syllabus_ref": "युनिट 1: पुनर्चनावाद",
-    "unit": 1
+    "explanation": "पुनर्चनावादाचे उद्दिष्ट समाज सुधारणेसाठी सामाजिक परिवर्तन घडवणे आहे."
   },
+  // Unit 3: Learner and Learning Process (9 questions)
   {
-    "question": "“Introspection method” was used mainly in ..........\n'आत्मनिरीक्षण पद्धती' ही प्रामुख्याने -------- मध्ये वापरली जाते.",
-    "options": ["Behaviourism\nवर्तनवाद", "Gestalt\nसमच्छिवाद", "Structuralism\nरचनावाद", "Functionalism\nकार्यवाद"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: मानसशास्त्रीय पद्धती",
+    "question": "‘आत्मनिरीक्षण पद्धती’ प्रामुख्याने कोणत्या पद्धतीमध्ये वापरली जाते?",
+    "options": ["वर्तनवाद", "समच्छिवाद", "रचनावाद", "कार्यवाद"],
     "correct": 2,
-    "explanation": "Structuralism (Wundt, Titchener) relied on introspection.",
-    "syllabus_ref": "युनिट 3: मानसशास्त्रीय पद्धती",
-    "unit": 3
+    "explanation": "रचनावाद (वुंट, टिचनर) आत्मनिरीक्षणावर आधारित होता."
   },
   {
-    "question": "Insight learning is basically learning by …....\nमर्मदृष्टी अध्ययन हे मुळात: ----------- अध्ययन असते.",
-    "options": ["Cognition\nबोधात्मक", "Condition\nअभिसंधान", "Imitation\nअनुकरण", "Trial & Error\nप्रयत्न प्रमाद"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: अधिगम सिद्धांत – गेस्टाल्ट",
+    "question": "‘मर्मदृष्टी अध्ययन’ हे मुळात कशावर आधारित आहे?",
+    "options": ["बोधात्मक", "अभिसंधान", "अनुकरण", "प्रयत्न प्रमाद"],
     "correct": 0,
-    "explanation": "Insight learning (Gestalt) is cognitive – sudden understanding.",
-    "syllabus_ref": "युनिट 3: अधिगम सिद्धांत – Gestalt",
-    "unit": 3
+    "explanation": "गेस्टाल्टचे अंतर्दृष्टी (insight) अध्ययन बोधात्मक असते – अचानक समज येते."
   },
   {
-    "question": "Tolman called his theoretical views as ..........\nटॉलमन यांच्या सैध्दांतिक मतांना -संबोधतो.",
-    "options": ["Behaviorism\nवर्तनवादी", "S.R. theory\nS.R. उपपत्ती", "Purposive\nहेतूदर्शक", "Radical behaviorism\nसमूळ वर्तनवादी"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: टॉलमन",
+    "question": "टॉलमन यांनी आपल्या सैद्धांतिक मतांना काय संबोधले?",
+    "options": ["वर्तनवाद", "S.R. उपपत्ती", "हेतूदर्शक", "समूळ वर्तनवाद"],
     "correct": 2,
-    "explanation": "Tolman's theory is purposive behaviourism – goal-directed learning.",
-    "syllabus_ref": "युनिट 3: Tolman",
-    "unit": 3
+    "explanation": "टॉलमनचा सिद्धांत हेतूदर्शक वर्तनवाद आहे – अध्ययन हे उद्दिष्टकेंद्री असते."
   },
   {
-    "question": "In the development of emotions …........ plays a major role.\nभावनात्मक विकासामध्ये ................ हे प्रमुख भूमिका बजावतात.",
-    "options": ["Insight\nमर्मदृष्टि", "Learning\nअध्ययन", "Maturation\nपरिपक्वता", "Intelligence\nबुद्धिमत्ता"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: भावनिक विकास",
+    "question": "भावनिक विकासामध्ये कोणत्या घटकाची प्रमुख भूमिका असते?",
+    "options": ["मर्मदृष्टी", "अध्ययन", "परिपक्वता", "बुद्धिमत्ता"],
     "correct": 2,
-    "explanation": "Emotional development largely depends on nervous system maturation.",
-    "syllabus_ref": "युनिट 3: भावनिक विकास",
-    "unit": 3
+    "explanation": "भावनिक विकास मुख्यतः परिपक्वतेवर अवलंबून असतो (मज्जासंस्थेचा विकास)."
   },
   {
-    "question": "Both types and traits theories of personality focus on people's characteristics which are ............\nव्यक्तिमत्वाच्या वर्ग व गुण या दोन्ही उपपत्ती व्यक्तिंच्या गुणवैशिष्ट्यांवर भर देतात जे असतात.",
-    "options": ["Motivational\nप्रेरणात्मक", "Personal\nवैयक्तिक", "Attitudinal\nवृत्तीत्मक", "Emotional\nभावनात्मक"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: व्यक्तिमत्व सिद्धांत",
+    "question": "व्यक्तिमत्वाचे वर्ग व गुण या दोन्ही सिद्धांत व्यक्तींच्या कोणत्या गुणवैशिष्ट्यांवर भर देतात?",
+    "options": ["प्रेरणात्मक", "वैयक्तिक", "वृत्तीत्मक", "भावनात्मक"],
     "correct": 1,
-    "explanation": "Both type and trait theories describe personality in terms of stable personal characteristics.",
-    "syllabus_ref": "युनिट 3: व्यक्तिमत्व सिद्धांत",
-    "unit": 3
+    "explanation": "हे दोन्ही सिद्धांत व्यक्तीच्या स्थिर वैयक्तिक वैशिष्ट्यांचे वर्णन करतात."
   },
   {
-    "question": "Chain learning is connected with ......\nसाखळी अध्ययन हे - शी संबंधित आहे.",
-    "options": ["Bruner\nबुनर", "Gagne\nगॅग्ने", "Tolman\nटॉलमन", "Thorndike\nथॉनडाईक"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: गॅग्ने",
+    "question": "‘साखळी अध्ययन’ हे कोणत्या सिद्धांताशी संबंधित आहे?",
+    "options": ["ब्रुनर", "गॅग्ने", "टॉलमन", "थॉर्नडाईक"],
     "correct": 1,
-    "explanation": "Gagne's learning hierarchy includes chain learning.",
-    "syllabus_ref": "युनिट 3: Gagne",
-    "unit": 3
+    "explanation": "गॅग्नेच्या श्रेणीबद्ध अध्ययनात साखळी अध्ययन हा एक प्रकार आहे."
   },
   {
-    "question": "The view that 'learning, instead of being reinforced, should be self-rewarding' was expressed by .......\n'अध्ययन हे प्रबलनाऐवजी, स्व पुरस्कृत असावे' असे मत - यांनी मांडले.",
-    "options": ["Pavlov\nपॉव्हलॉव्ह", "Skinner\nस्किनर", "Thorndike\nथॉनडाईक", "Bruner\nबूनर"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: ब्रुनर",
+    "question": "'अध्ययन हे प्रबलनाऐवजी स्वतःच पुरस्कृत असावे' – हे मत कोणी मांडले?",
+    "options": ["पावलॉव्ह", "स्किनर", "थॉर्नडाईक", "ब्रुनर"],
     "correct": 3,
-    "explanation": "Bruner emphasised intrinsic motivation and discovery learning.",
-    "syllabus_ref": "युनिट 3: Bruner",
-    "unit": 3
+    "explanation": "ब्रुनर यांनी अंतर्गत प्रेरणा व शोधपद्धतीचा पुरस्कार केला."
   },
   {
-    "question": "The most basic category in 'Maslow's hierarchy of human needs' is ...... needs.\nमॉस्लो यांच्या मानवी गरजांच्या श्रेणीबद्दतेमध्ये सर्वात पायाभूत घटक हा - गरजा आहे.",
-    "options": ["Physiological\nशारीरिक", "Belonging\nपरावलंबित", "Love\nप्रेम", "Social\nसामाजिक"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: मास्लो",
+    "question": "मास्लो यांच्या गरजांच्या श्रेणीतील सर्वात पायाभूत घटक कोणता आहे?",
+    "options": ["शारीरिक गरजा", "अपराधीपण", "प्रेम", "सामाजिक"],
     "correct": 0,
-    "explanation": "Maslow's pyramid starts with physiological needs (food, water, shelter).",
-    "syllabus_ref": "युनिट 3: Maslow",
-    "unit": 3
+    "explanation": "शारीरिक गरजा (अन्न, पाणी, निवारा) हा सर्वात पायाभूत गरजांचा प्रकार आहे."
   },
   {
-    "question": "...... was described that the intellectual development as age related development.\nबुद्धिमत्ता विकास हा वयाशी संबंधित विकास आहे असे वर्णन ............ यांनी केले.",
-    "options": ["Bruner\nबुनर", "Piaget\nपियाजे", "Hilda Taba\nहिल्डा टाबा", "Ausubel\nआसूबेल"],
+    "unit": 3,
+    "syllabus_ref": "युनिट ३: पियाजे",
+    "question": "बौद्धिक विकास वयाशी संबंधित आहे असे वर्णन कोणी केले?",
+    "options": ["ब्रुनर", "पियाजे", "हिल्डा टाबा", "आसूबेल"],
     "correct": 1,
-    "explanation": "Piaget's stages of cognitive development are tied to age ranges.",
-    "syllabus_ref": "युनिट 3: Piaget",
-    "unit": 3
+    "explanation": "पियाजे यांनी बौद्धिक विकासाचे वयाशी बांधलेले टप्पे सांगितले."
   },
+  // Unit 6: Research in Education (8 questions)
   {
-    "question": "If the findings of a research have practical implications for improving educational patterns, it is called ...... research.\nसंशोधनाच्या निष्कर्षाचा व्यावहारिक उपयोग हा शैक्षणिक आकृतिबंध सुधारणेसाठी होत असले तर त्यास - संशोधन म्हणतात.",
-    "options": ["Pure\nमूलभूत", "Applied\nउपयोजित", "Descriptive\nवर्णनात्मक", "Experimental\nप्रायोगिक"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: संशोधन प्रकार",
+    "question": "जर संशोधनाच्या निष्कर्षाचा शैक्षणिक सुधारणांसाठी व्यावहारिक उपयोग होत असेल तर त्यास काय म्हणतात?",
+    "options": ["मूलभूत", "उपयोजित", "वर्णनात्मक", "प्रायोगिक"],
     "correct": 1,
-    "explanation": "Applied research aims to solve practical problems.",
-    "syllabus_ref": "युनिट 6: संशोधन प्रकार",
-    "unit": 6
+    "explanation": "उपयोजित संशोधनाचा उद्देश व्यावहारिक समस्या सोडवणे असतो."
   },
   {
-    "question": "Likert's method is used to prepare an ......... test.\nलिंकर्ट पद्धती ही ................ चाचणी तयार करण्यास वापरली जाते.",
-    "options": ["Ability\nक्षमता", "Attitude\nअभिवृत्ती", "Aptitude\nअभियोग्यता", "Achievement\nसंपादन"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: साधने – अभिवृत्ती मापन",
+    "question": "लिकर्ट पद्धती खालीलपैकी कोणती चाचणी तयार करण्यासाठी वापरली जाते?",
+    "options": ["क्षमता", "अभिवृत्ती", "अभियोग्यता", "संपादन"],
     "correct": 1,
-    "explanation": "Likert scale is used for measuring attitudes.",
-    "syllabus_ref": "युनिट 6: साधने – Attitude scale",
-    "unit": 6
+    "explanation": "लिकर्ट पद्धतीने अभिवृत्ती मोजण्यासाठी प्रश्नावली बनविली जाते."
   },
+  // Q28 tricky but keep as given
   {
-    "question": "...... factor does not affect internal validity of an experimental design.\nप्रायोगिक अभिकल्पाच्या अंतर्गत सप्रमाणतेवर .................... हा घटक प्रभाव टाकू शकत नाही.",
-    "options": ["Pre-testing\nपूर्व चाचणी", "Maturation of subjects\nविषयाची परिपक्वता", "Statistical regression\nसांख्यिकीय प्रतिगमन", "Noise during experiment\nप्रयोगादरम्यानातील आवाज"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: प्रायोगिक अभिकल्प – अंतर्गत सप्रमाणता",
+    "question": "प्रायोगिक अभिकल्पाच्या अंतर्गत सप्रमाणतेवर खालीलपैकी कोणता घटक प्रभाव टाकू शकत नाही?",
+    "options": ["पूर्व चाचणी", "विषयाची परिपक्वता", "सांख्यिकीय प्रतिगमन", "प्रयोगादरम्यानचा आवाज"],
     "correct": 0,
-    "explanation": "Pre-testing is a threat to external validity, not internal (according to the answer key).",
-    "syllabus_ref": "युनिट 6: प्रायोगिक अभिकल्प – अंतर्गत सप्रमाणता",
-    "unit": 6
+    "explanation": "दिलेल्या उत्तरकुंजीनुसार पूर्व चाचणी हा अंतर्गत प्रमाणतेवर परिणाम करत नाही (हा अपवादात्मक प्रश्न आहे)."
   },
   {
-    "question": "Wherever population is homogeneous, the best method of sampling is :\nजेव्हा जनसंख्या हि एकसमान असते, तेव्हा नमूना निवडीची ................. ही पद्धत योग्य असते.",
-    "options": ["Incidental\nप्रासंगिक", "Purposive\nसहेतूक", "Random\nयादृच्छिक", "Stratified\nस्तरीकरण"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: नमुना निवड",
+    "question": "जेव्हा जनसंख्या एकसमान असते तेव्हा नमुना निवडीची कोणती पद्धत योग्य असते?",
+    "options": ["प्रासंगिक", "सहेतूक", "यादृच्छिक", "स्तरीकरण"],
     "correct": 2,
-    "explanation": "Simple random sampling is sufficient for homogeneous populations.",
-    "syllabus_ref": "युनिट 6: नमुना निवड – यादृच्छिक",
-    "unit": 6
+    "explanation": "एकसमान जनसंख्येसाठी साधा यादृच्छिक नमुना पुरेसा असतो."
   },
   {
-    "question": "In research the selection of …........ should be representative?\nसंशोधनामध्ये - निवड प्रतिनिधिक असावी.",
-    "options": ["Subject\nविषयाची", "Objectives\nउद्दिष्टांची", "Sample\nन्यायदर्शाची", "Data collection tool\nमाहिती संकलन साधनाची"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: नमुना",
+    "question": "संशोधनामध्ये कशाची निवड प्रतिनिधिक असावी?",
+    "options": ["विषयाची", "उद्दिष्टांची", "न्यायदर्शाची", "माहिती संकलन साधनाची"],
     "correct": 2,
-    "explanation": "The sample must be representative of the population.",
-    "syllabus_ref": "युनिट 6: नमुना",
-    "unit": 6
+    "explanation": "नमुन्याने जनसंख्येचे प्रतिनिधित्व केले पाहिजे."
   },
   {
-    "question": "For effective results, the educational supervisor should follow which of the following approaches?\nपरिणामकारक निकालासाठी, शैक्षणिक पर्यवेक्षक खालीलपैकी कोणत्या दृष्टीकोनाकडे वळतात?",
-    "options": ["Team Approach\nसांधिक दृष्टीकोन", "Modern Approach\nआधुनिक दृष्टीकोन", "Traditional Approach\nपारंपारिक दृष्टीकोन", "Administrative Approach\nप्रशासकीय दृष्टीकोन"],
-    "correct": 0,
-    "explanation": "Team approach (collaborative supervision) is most effective.",
-    "syllabus_ref": "युनिट 9: पर्यवेक्षण – Team Approach",
-    "unit": 9
-  },
-  {
-    "question": "...... is a barrier in educational management.\nशैक्षणिक व्यवस्थापनात - हा घटक अडथळा निर्माण करतो.",
-    "options": ["Group spirit\nसंघ भावना", "Forecasting\nभविष्य काळाचा वेध", "Lack of humane attitude\nमानवतावादी दृष्टिकोनाचा अभाव", "Self-management\nस्व-व्यवस्थापन"],
-    "correct": 2,
-    "explanation": "Lack of humane attitude (rigidity, indifference) creates barriers.",
-    "syllabus_ref": "युनिट 9: व्यवस्थापनातील अडथळे",
-    "unit": 9
-  },
-  {
-    "question": "Supervision in school administration should be primarily ..........\nशालेय प्रशासनातील पर्यवेक्षण हे प्राथमिकतः - असते.",
-    "options": ["Preventive and critical\nप्रतिबंधक व चिकित्सक", "Preventive and corrective\nप्रतिबंधक व सुधारात्मक", "Constructive and creative\nरचनात्मक व सर्जनात्मक", "Constructive and critical\nरचनात्मक व चिकित्सक"],
-    "correct": 3,
-    "explanation": "Supervision should be constructive (developing) and critical (examining practices).",
-    "syllabus_ref": "युनिट 9: शालेय पर्यवेक्षण",
-    "unit": 9
-  },
-  {
-    "question": "...... has advocated Human relation approach.\nमानवी संबंध दृष्टीकोन हा --- यांनी मांडला.",
-    "options": ["Taylor\nटेलर", "Davis\nडेविस", "Elton Mayo\nइल्टन मायो", "Henry Fayol\nहेन्री फेयोल"],
-    "correct": 2,
-    "explanation": "Elton Mayo and Hawthorne studies pioneered the human relations approach.",
-    "syllabus_ref": "युनिट 9: Human relations approach",
-    "unit": 9
-  },
-  {
-    "question": "The type of grading that asserts fixed proportion of learners at different grade points is known as ........\nविविध श्रेणी बिंदूत विद्यार्थीच्या निश्चित प्रमाणावर भर देणाऱ्या श्रेणी प्रकारास ---- असे म्हणतात.",
-    "options": ["Direct grading\nप्रत्यक्ष श्रेणी", "Indirect grading\nअप्रत्यक्ष श्रेणी", "Relative grading\nसापेक्ष श्रेणी", "Absolute grading\nपरिपूर्ण श्रेणी"],
-    "correct": 2,
-    "explanation": "Relative (norm-referenced) grading uses fixed proportion (e.g., top 10%).",
-    "syllabus_ref": "युनिट 7: मूल्यमापन – ग्रेडिंग",
-    "unit": 7
-  },
-  {
-    "question": "Teacher Eligibility test conducted for selection of candidates for admission into teacher education institution is an example of ...... test.\nशिक्षक शिक्षण महाविद्यालयाच्या प्रवेशासाठी उमेदवार निवडताना घेतली जाणारी शिक्षक पात्रता परीक्षा ही - चाचणीचे उदाहरण आहे.",
-    "options": ["Attitude\nअभिवृत्ती", "Aptitude\nअभियोग्यता", "Achievement\nसंपादन", "Placement\nपदनिश्चिती"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: चाचणीचे प्रकार – अभियोग्यता",
+    "question": "शिक्षक प्रशिक्षण महाविद्यालयाच्या प्रवेशासाठी घेतली जाणारी शिक्षक पात्रता परीक्षा ही कोणत्या प्रकारच्या चाचणीचे उदाहरण आहे?",
+    "options": ["अभिवृत्ती", "अभियोग्यता", "संपादन", "पदनिश्चिती"],
     "correct": 1,
-    "explanation": "TET for admission is an aptitude test – predicting potential to succeed in teacher training.",
-    "syllabus_ref": "युनिट 6: चाचणीचे प्रकार – Aptitude test",
-    "unit": 6
+    "explanation": "प्रवेश परीक्षा अभियोग्यता (aptitude) चाचणी आहे – ती संभाव्य यशाचा अंदाज करते."
   },
   {
-    "question": "...... type of tools is most appropriate to assess one's interest in a particular phenomenon.\nविशिष्ट स्थितीत एखाद्याची अभिरुची निर्धारित करताना - प्रकारचे साधन हे अधिक योग्य आहे.",
-    "options": ["Questionnaire\nप्रश्नावली", "Scale\nश्रेणी", "Test\nचाचणी", "Inventory\nशोधिका"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: साधने – प्रश्नावली",
+    "question": "एखाद्या विशिष्ट गोष्टीतील अभिरुची मोजण्यासाठी कोणत्या प्रकारचे साधन अधिक योग्य आहे?",
+    "options": ["प्रश्नावली", "श्रेणी", "चाचणी", "शोधिका"],
     "correct": 0,
-    "explanation": "Questionnaire is used to assess interests (interest inventory also correct but not in options).",
-    "syllabus_ref": "युनिट 6: साधने – Questionnaire",
-    "unit": 6
+    "explanation": "अभिरुची मोजण्यासाठी प्रश्नावली (किंवा आवडी-निवडीची यादी) वापरली जाते."
   },
   {
-    "question": "...... is an unstructured tool.\n- हे असंघटीत साधन आहे.",
-    "options": ["Attitude scale\nअभिवृत्ती श्रेणी", "Objective test\nवस्तूनिष्ठ चाचणी", "Intelligence test\nबुद्धिमत्ता चाचणी", "Essay test\nनिबंधवजा चाचणी"],
+    "unit": 6,
+    "syllabus_ref": "युनिट ६: साधने – निबंधवजा चाचणी",
+    "question": "खालीलपैकी कोणते एक असंघटीत साधन आहे?",
+    "options": ["अभिवृत्ती श्रेणी", "वस्तूनिष्ठ चाचणी", "बुद्धिमत्ता चाचणी", "निबंधवजा चाचणी"],
     "correct": 3,
-    "explanation": "Essay test is unstructured; no fixed response format.",
-    "syllabus_ref": "युनिट 6: साधने – Essay test",
-    "unit": 6
+    "explanation": "निबंधवजा चाचणी असंघटीत असते; तिचे उत्तर स्वरूप निश्चित नसते."
+  },
+  // Unit 9: Management, Administration (4 questions)
+  {
+    "unit": 9,
+    "syllabus_ref": "युनिट ९: पर्यवेक्षण",
+    "question": "परिणामकारक निकालासाठी शैक्षणिक पर्यवेक्षकाने कोणता दृष्टिकोन स्वीकारावा?",
+    "options": ["सांधिक दृष्टीकोन", "आधुनिक दृष्टीकोन", "पारंपारिक दृष्टीकोन", "प्रशासकीय दृष्टीकोन"],
+    "correct": 0,
+    "explanation": "सहकार्यात्मक (टीम) दृष्टीकोन प्रभावी ठरतो."
   },
   {
-    "question": "...... method is one of the simulation methods.\n- ही अभिकूप अध्यापन पद्धतीपैकी एक पद्धत आहे.",
-    "options": ["Case\nकेस", "Brain-storming\nबुद्धिमंथन", "Dramatization\nनाट्यीकरण", "Discussion\nचर्चा"],
+    "unit": 9,
+    "syllabus_ref": "युनिट ९: शैक्षणिक व्यवस्थापनातील अडथळे",
+    "question": "शैक्षणिक व्यवस्थापनात खालीलपैकी कोणता अडथळा निर्माण करतो?",
+    "options": ["संघ भावना", "भविष्यकाळाचा वेध", "मानवतावादी दृष्टिकोनाचा अभाव", "स्व-व्यवस्थापन"],
     "correct": 2,
-    "explanation": "Dramatization (role-play) is a simulation method.",
-    "syllabus_ref": "युनिट 7: अध्यापन पद्धती – Simulation",
-    "unit": 7
+    "explanation": "मानवतावादी दृष्टिकोनाचा अभाव (कठोरपणा, उदासीनता) व्यवस्थापनात अडथळा निर्माण करतो."
   },
   {
-    "question": "Educational technology encourages learning by controlling ..........\nशैक्षणिक तंत्रज्ञान हे - ला नियंत्रित करून अध्ययनात प्रेरित करते.",
-    "options": ["Behaviors\nवर्तन", "Attitudes\nअभिवृत्ती", "Habits\nसवयी", "Environment\nवातावरण"],
+    "unit": 9,
+    "syllabus_ref": "युनिट ९: शालेय पर्यवेक्षण",
+    "question": "शालेय प्रशासनातील पर्यवेक्षण हे प्राथमिकतः कसे असावे?",
+    "options": ["प्रतिबंधक व चिकित्सक", "प्रतिबंधक व सुधारात्मक", "रचनात्मक व सर्जनात्मक", "रचनात्मक व चिकित्सक"],
     "correct": 3,
-    "explanation": "Educational technology manipulates the learning environment to facilitate learning.",
-    "syllabus_ref": "युनिट 8: शैक्षणिक तंत्रज्ञान",
-    "unit": 8
+    "explanation": "पर्यवेक्षण रचनात्मक (विकासात्मक) आणि चिकित्सक (प्रतिबिंबात्मक) असावे."
   },
   {
-    "question": "Two important phases of cybernetics are ..........\nसायबरनेटिक्सच्या - हे दोन महत्वाचे टप्पे आहेत.",
-    "options": ["Followup-evaluation\nअनुधावन - मूल्यमापन", "Followup-control\nअनुधावन-नियंत्रण", "Feedback-control\nप्रत्याभरण- नियंत्रण", "Feedback-followup\nप्रत्याभरण- अनुधावन"],
+    "unit": 9,
+    "syllabus_ref": "युनिट ९: Human relations approach",
+    "question": "मानवी संबंध दृष्टिकोन कोणी मांडला?",
+    "options": ["टेलर", "डेव्हिस", "एल्टन मायो", "हेन्री फेयोल"],
     "correct": 2,
-    "explanation": "Cybernetics (Norbert Wiener) is based on feedback and control systems.",
-    "syllabus_ref": "युनिट 8: सायबरनेटिक्स",
-    "unit": 8
+    "explanation": "एल्टन मायो व हॉथॉर्न अभ्यास यांनी मानवी संबंध दृष्टिकोन प्रस्तावित केला."
   },
+  // Unit 7: Assessment (2 questions)
   {
-    "question": "Programmed learning is based on the principles of …........ learning theory.\nअभिक्रमित अध्ययन हे --- अध्ययन उपपत्तीच्या तत्वांवर आधारलेले आहे.",
-    "options": ["Conditioned\nअभिसंधान", "Cognitive\nबोधात्मक", "Gestalt\nसमच्छिवादी", "Operant-conditioning\nसाधक अभिसंधान"],
-    "correct": 3,
-    "explanation": "Programmed instruction is based on Skinner's operant conditioning (small steps, reinforcement).",
-    "syllabus_ref": "युनिट 8: Programmed learning",
-    "unit": 8
-  },
-  {
-    "question": "Special Education Courses are controlled by ........\nविशेष शिक्षणाचे शिक्षणक्रम हे ................कडून नियंत्रित केले जातात.",
-    "options": ["Special Education Council of India\nभारतीय विशेष शिक्षण परिषद", "Rehabilitation Council of India\nभारतीय पुनर्वसन परिषद", "National Council of Teacher Education\nराष्ट्रीय शिक्षक शिक्षण परिषद", "Medical Council of India\nभारतीय वैद्यकीय परिषद"],
+    "unit": 7,
+    "syllabus_ref": "युनिट ७: मूल्यमापन – ग्रेडिंग",
+    "question": "विविध श्रेणी बिंदूंवर शिकणाऱ्यांचे निश्चित प्रमाण ठरवणाऱ्या ग्रेडिंग प्रकाराला काय म्हणतात?",
+    "options": ["प्रत्यक्ष श्रेणी", "सापेक्ष श्रेणी", "अप्रत्यक्ष श्रेणी", "परिपूर्ण श्रेणी"],
     "correct": 1,
-    "explanation": "RCI regulates special education courses and professionals.",
-    "syllabus_ref": "युनिट 10: कायदे – RCI Act 1992",
-    "unit": 10
+    "explanation": "सापेक्ष (नियम-संदर्भित) ग्रेडिंगमध्ये विद्यार्थ्यांचे निश्चित प्रमाणात वितरण केले जाते."
   },
   {
-    "question": "The child who reads numbers wrongly has …..... learning disability.\nजे मूल चूकीचे क्रमांक वाचते ते ----- अध्ययन अक्षय असते.",
-    "options": ["Dyscrasia\nडिस्क्रेसिया", "Dyslexia\nडिस्लेक्सिया", "Dyspepsia\nडिस्पेपसिया", "Dyscalculia\nडिस्केलकुलिया"],
+    "unit": 7,
+    "syllabus_ref": "युनिट ७: अध्यापन पद्धती – सिम्युलेशन",
+    "question": "खालीलपैकी कोणती एक सिम्युलेशन पद्धत आहे?",
+    "options": ["केस", "बुद्धिमंथन", "नाट्यीकरण", "चर्चा"],
+    "correct": 2,
+    "explanation": "नाट्यीकरण (भूमिका-नाट्य) ही एक अनुकरण (सिम्युलेशन) पद्धत आहे."
+  },
+  // Unit 8: Technology (3 questions)
+  {
+    "unit": 8,
+    "syllabus_ref": "युनिट ८: शैक्षणिक तंत्रज्ञान",
+    "question": "शैक्षणिक तंत्रज्ञान कशाला नियंत्रित करून अध्ययनात प्रेरित करते?",
+    "options": ["वर्तन", "अभिवृत्ती", "सवयी", "वातावरण"],
     "correct": 3,
-    "explanation": "Dyscalculia is specific learning disability in mathematics (numbers).",
-    "syllabus_ref": "युनिट 10: शिक्षण अक्षमता",
-    "unit": 10
+    "explanation": "शैक्षणिक तंत्रज्ञान शिकण्याचे वातावरण (इन्व्हायर्नमेंट) नियंत्रित करते."
   },
   {
-    "question": "Ability grouping is most suitable for ..........\nक्षमता गट - साठी योग्य आहे.",
-    "options": ["Gifted\nप्रजावंत", "Hearing impaired\nकर्णबधिर", "Visually impaired\nदृष्टिहीन", "Physically handicapped\nशारीरिक अपंग"],
-    "correct": 0,
-    "explanation": "Gifted learners benefit from ability grouping for enriched learning.",
-    "syllabus_ref": "युनिट 10: एकात्मिक शिक्षण",
-    "unit": 10
+    "unit": 8,
+    "syllabus_ref": "युनिट ८: सायबरनेटिक्स",
+    "question": "सायबरनेटिक्सचे दोन महत्त्वाचे टप्पे कोणते आहेत?",
+    "options": ["अनुधावन-मूल्यमापन", "अनुधावन-नियंत्रण", "प्रत्याभरण-नियंत्रण", "प्रत्याभरण-अनुधावन"],
+    "correct": 2,
+    "explanation": "सायबरनेटिक्स (नॉर्बर्ट विनर) प्रतिक्रिया व नियंत्रण यावर आधारित आहे."
   },
   {
-    "question": "Delinquent children are ............ exceptional.\nगुन्हेगार मुले हे - अपवादात्मक असतात.",
-    "options": ["Physical\nशारीरिक", "Emotional\nभावनिक", "Intelligence\nबौद्धिक", "Socially\nसामाजिक"],
+    "unit": 8,
+    "syllabus_ref": "युनिट ८: अभिक्रमित अध्ययन",
+    "question": "अभिक्रमित अध्ययन हे कोणत्या अध्ययन सिद्धांताच्या तत्त्वांवर आधारित आहे?",
+    "options": ["अभिसंधान", "बोधात्मक", "समच्छिवादी", "साधक अभिसंधान"],
     "correct": 3,
-    "explanation": "Delinquent children are socially exceptional – they exhibit anti-social behaviour.",
-    "syllabus_ref": "युनिट 10: अपवादात्मक मुले – Delinquent",
-    "unit": 10
+    "explanation": "स्किनरचा साधक अभिसंधान (operant conditioning) सिद्धांत अभिक्रमित अध्ययनाचा पाया आहे."
   },
+  // Unit 10: Inclusive Education (4 questions)
   {
-    "question": "The main purpose of Navodaya Vidyalayas is to give education to ......\nनवोदय विद्यालयाचा प्रमुख हेतू --- यांना शिक्षण देणे हा आहे.",
-    "options": ["Rural talented students\nग्रामिण प्रतिभावान विद्यार्थी", "Urban students\nशहरी विद्यार्थी", "Girls students only\nफक्त मुली विद्यार्थी", "Rural students\nग्रामिण विद्यार्थी"],
-    "correct": 0,
-    "explanation": "Navodaya Vidyalayas were established for talented rural students.",
-    "syllabus_ref": "युनिट 2: NPE 1986 – Navodaya Vidyalayas",
-    "unit": 2
-  },
-  {
-    "question": "Refresher courses for teacher education in secondary level are conducted by ..........\nमाध्यमिक स्तरावरील शिक्षक शिक्षणाचे उजाळा वर्ग हे - राबवतात.",
-    "options": ["State Institutes of Education\nराज्य शिक्षण संस्था", "Human Resource Development Centre\nमानव संसाधन विकास केंद्र", "National Institute of Education\nराष्ट्रिय शिक्षण संस्था", "National Council for Teacher Education\nराष्ट्रिय शिक्षक शिक्षण परिषद"],
+    "unit": 10,
+    "syllabus_ref": "युनिट १०: कायदे – आरसीआय कायदा १९९२",
+    "question": "विशेष शिक्षण अभ्यासक्रम कोणत्या संस्थेद्वारे नियंत्रित केले जातात?",
+    "options": ["भारतीय विशेष शिक्षण परिषद", "भारतीय पुनर्वसन परिषद", "राष्ट्रीय शिक्षक शिक्षण परिषद", "भारतीय वैद्यकीय परिषद"],
     "correct": 1,
-    "explanation": "HRDCs (formerly Academic Staff Colleges) conduct refresher courses for teacher educators.",
-    "syllabus_ref": "युनिट 4: शिक्षक शिक्षण – UGC HRDC",
-    "unit": 4
+    "explanation": "आरसीआय (पुनर्वसन परिषद) विशेष शिक्षण अभ्यासक्रमांचे नियमन करते."
   },
   {
-    "question": "Three major components of teacher education are ..........\nशिक्षक शिक्षणाचे तीन प्रमुख घटक - हे होत.",
+    "unit": 10,
+    "syllabus_ref": "युनिट १०: शिक्षण अक्षमता",
+    "question": "संख्या चुकीची वाचणाऱ्या मुलास कोणती शिक्षण अक्षमता असते?",
+    "options": ["डिस्क्रेसिया", "डिस्लेक्सिया", "डिस्पेपसिया", "डिस्कॅल्क्युलिया"],
+    "correct": 3,
+    "explanation": "डिस्कॅल्क्युलिया म्हणजे गणितीय अक्षमता (संख्या वाचण्यात अडचण)."
+  },
+  {
+    "unit": 10,
+    "syllabus_ref": "युनिट १०: एकात्मिक शिक्षण – भेट देणारे विद्यार्थी",
+    "question": "क्षमतागट (ability grouping) कोणत्या प्रकारच्या विद्यार्थ्यांसाठी सर्वाधिक योग्य आहे?",
+    "options": ["प्रजावंत", "कर्णबधिर", "दृष्टिहीन", "शारीरिक अपंग"],
+    "correct": 0,
+    "explanation": "प्रजावंत विद्यार्थ्यांना क्षमतागटात समृद्ध शिक्षण देता येते."
+  },
+  {
+    "unit": 10,
+    "syllabus_ref": "युनिट १०: अपवादात्मक मुले – गुन्हेगार",
+    "question": "गुन्हेगार मुले कोणत्या प्रकारची अपवादात्मक असतात?",
+    "options": ["शारीरिक", "भावनिक", "बौद्धिक", "सामाजिक"],
+    "correct": 3,
+    "explanation": "गुन्हेगार मुले सामाजिकदृष्ट्या अपवादात्मक असतात – त्यांचे वर्तन समाजविरोधी असते."
+  },
+  // Unit 2: Policies (1 question) and Unit 4: Teacher Education (3 questions)
+  {
+    "unit": 2,
+    "syllabus_ref": "युनिट २: NPE 1986 – नवोदय विद्यालय",
+    "question": "नवोदय विद्यालयाचा प्रमुख हेतू कोणत्या विद्यार्थ्यांना शिक्षण देणे हा आहे?",
+    "options": ["ग्रामीण प्रतिभावान विद्यार्थी", "शहरी विद्यार्थी", "फक्त मुली विद्यार्थी", "ग्रामीण विद्यार्थी"],
+    "correct": 0,
+    "explanation": "नवोदय विद्यालये ग्रामीण भागातील प्रतिभावान विद्यार्थ्यांसाठी स्थापन करण्यात आली."
+  },
+  {
+    "unit": 4,
+    "syllabus_ref": "युनिट ४: शिक्षक शिक्षण – यूजीसी एचआरडीसी",
+    "question": "माध्यमिक स्तरावरील शिक्षक शिक्षणाचे उजाळा वर्ग कोण राबवते?",
+    "options": ["राज्य शिक्षण संस्था", "मानव संसाधन विकास केंद्र", "राष्ट्रीय शिक्षण संस्था", "राष्ट्रीय शिक्षक शिक्षण परिषद"],
+    "correct": 1,
+    "explanation": "यूजीसी अंतर्गत एचआरडीसी (पूर्वी अकादमिक स्टाफ कॉलेज) उजाळा वर्ग आयोजित करते."
+  },
+  {
+    "unit": 4,
+    "syllabus_ref": "युनिट ४: शिक्षक शिक्षणाचे घटक",
+    "question": "शिक्षक शिक्षणाचे तीन प्रमुख घटक कोणते आहेत?",
     "options": [
-      "Objectives, methodology, evaluation\nउद्दिष्टे, अध्यापन पद्धती, मूल्यमापन",
-      "Philosophy, psychology, sociology\nतत्वज्ञान, मानसशास्त्र, समाजशास्त्र",
-      "Theoretical foundation, methodology of school subjects, internship\nसैद्धांतिक आधार, शालेय विषय अध्यापन पद्धती, आंतरवासिता",
-      "Practice teaching, internship, micro teaching\nसराव पाठ, आंतरवासिता, सूक्ष्म अध्यापन"
+      "उद्दिष्टे, अध्यापन पद्धती, मूल्यमापन",
+      "तत्त्वज्ञान, मानसशास्त्र, समाजशास्त्र",
+      "सैद्धांतिक आधार, शालेय विषय अध्यापन पद्धती, आंतरवासिता",
+      "सराव पाठ, आंतरवासिता, सूक्ष्म अध्यापन"
     ],
     "correct": 2,
-    "explanation": "The three components: foundation courses, pedagogy of subjects, and school internship (NCFTE 2009).",
-    "syllabus_ref": "युनिट 4: शिक्षक शिक्षणाचे घटक",
-    "unit": 4
+    "explanation": "एनसीएफटीई २००९ नुसार तीन घटक: पायाभूत अभ्यासक्रम, शालेय विषयांच्या अध्यापन पद्धती, आणि शाळेतील सराव (इंटर्नशिप)."
   },
   {
-    "question": "The idea of four pillars of education was suggested by -\nशिक्षणाचे चार स्तंभ ही कल्पना - यांनी सुचविली.",
-    "options": ["UGC\nयू.जी.सी", "NCTE\nएन.सी.टी.ई", "UNESCO\nयू.एन.ई.एस.सी.ओ.", "UNICEF\nयू.एन.आय.सी.ई.एफ"],
+    "unit": 4,
+    "syllabus_ref": "युनिट ४: युनेस्को – शिक्षणाचे चार स्तंभ",
+    "question": "‘शिक्षणाचे चार स्तंभ’ ही कल्पना कोणत्या संस्थेने मांडली?",
+    "options": ["यूजीसी", "एनसीटीई", "युनेस्को", "युनिसेफ"],
     "correct": 2,
-    "explanation": "UNESCO's Delors report (1996) gave four pillars: Learning to know, do, live together, be.",
-    "syllabus_ref": "युनिट 4: UNESCO – चार स्तंभ",
-    "unit": 4
+    "explanation": "युनेस्कोच्या डेलोर्स अहवालात (१९९६) चार स्तंभ दिलेले आहेत: जाणून घेणे, करणे, एकत्र राहणे, असणे."
   }
 ];
