@@ -4,16 +4,26 @@
 var questions = [];
 var current = 0;
 var answers = {};
-var mode = 'full';
+var mode = 'practice';
 var selectedUnits = [];
 var timerInterval = null;
 var timerSeconds = 0;
 var reviewMode = false;
-var savedMode = 'full';
+var savedMode = 'practice';   // default mode
+var TIMERS = {
+  practice: 0,
+  unit: 0        // dynamic – will be set in startExam
+};
 
 var LABELS = ['अ', 'ब', 'क', 'ड'];
-var TIMERS = { full: 90*60, quick: 30*60, unit: 45*60, practice: 0 };
-var MODE_NAMES = { full: 'संपूर्ण परीक्षा', quick: 'जलद सराव', unit: 'युनिट सराव', practice: 'सराव मोड' };
+var MODE_NAMES = {
+  unit: 'युनिट सराव',
+  practice: 'सराव मोड'
+};
+var TIMERS = {
+  unit: 0,      // will be overridden dynamically
+  practice: 0
+};
 
 // ══════════════════════════════════════════════════════
 //  FLOATING BUTTON HELPERS
@@ -109,25 +119,43 @@ function toggleUnit(num, btn) {
 // ══════════════════════════════════════════════════════
 function startExam() {
   if (mode === 'unit' && selectedUnits.length === 0) {
-    showModal('कृपया किमान एक युनिट निवडा!', function() {}); return;
+    showModal('कृपया किमान एक युनिट निवडा!', function() {});
+    return;
   }
 
-  // Hide floating button immediately
   hideFloatingStart();
-
   savedMode = mode;
-  var pool = ALL_QUESTIONS.slice();
-  if (mode === 'unit') pool = pool.filter(function(q) { return selectedUnits.indexOf(q.unit) !== -1; });
-  if (mode === 'quick') pool = shuffle(pool).slice(0, 20);
-  else pool = shuffle(pool);
 
-  pool.forEach(function(q) { delete q._shuffledOptions; delete q._correctIndex; });
+  // Get pool from currentPaper (Paper 1 for now)
+  var pool = ALL_QUESTIONS.slice();
+
+  // If unit mode, filter by selected units
+  if (mode === 'unit') {
+    pool = pool.filter(function(q) {
+      return selectedUnits.indexOf(q.unit) !== -1;
+    });
+  }
+
+  // Shuffle the pool (good for both modes)
+  pool = shuffle(pool);
+
+  // Set timer seconds based on mode
+  if (mode === 'practice') {
+    timerSeconds = 0;
+  } else if (mode === 'unit') {
+    timerSeconds = pool.length * 60;   // 1 minute per question
+  }
+
+  // Clean up any previous shuffled data
+  pool.forEach(function(q) {
+    delete q._shuffledOptions;
+    delete q._correctIndex;
+  });
 
   questions = pool;
   current = 0;
   answers = {};
   reviewMode = false;
-  timerSeconds = TIMERS[mode];
 
   document.getElementById('mode-badge').textContent = MODE_NAMES[mode];
   document.getElementById('total-q-num').textContent = questions.length;
@@ -434,7 +462,7 @@ function resetHomeState() {
   current = 0;
   reviewMode = false;
   selectedUnits = [];
-  mode = 'full';
+  mode = 'practice';
 
   // Hide floating button (no animation, instant)
   var fl = document.getElementById('floating-start');
