@@ -221,7 +221,13 @@ function renderQuestion() {
   document.getElementById('btn-prev').disabled = current === 0;
 
   var nextBtn = document.getElementById('btn-next');
-  nextBtn.textContent = current === questions.length - 1 ? '🏁 शेवट' : 'पुढे ▶';
+if (current === questions.length - 1) {
+  nextBtn.textContent = '🏁 शेवट';
+  nextBtn.onclick = function() { confirmSubmit(); };
+} else {
+  nextBtn.textContent = 'पुढे ▶';
+  nextBtn.onclick = function() { navigate(1); };
+}
 
   var list = document.getElementById('options-list');
   list.innerHTML = '';
@@ -283,15 +289,8 @@ function selectAnswer(optIdx) {
 //  NAVIGATION
 // ══════════════════════════════════════════════════════
 function navigate(dir) {
-  if (dir === 1 && current === questions.length - 1) {
-    // Last question and clicked "शेवट" → submit
-    confirmSubmit();
-  } else {
-    // Normal navigation
-    current = Math.max(0, Math.min(questions.length - 1, current + dir));
-    renderQuestion();
-  }
-}
+  current = Math.max(0, Math.min(questions.length - 1, current + dir));
+  renderQuestion();
 }
 
 // ══════════════════════════════════════════════════════
