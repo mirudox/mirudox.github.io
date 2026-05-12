@@ -439,7 +439,7 @@
   window.addEventListener('load', function () {
     var paperScreen = document.getElementById('paper-select-screen');
     if (paperScreen && paperScreen.classList.contains('active')) {
-      setTimeout(showBittu, 1800);
+      setTimeout(showBittu, 2800);
     }
   });
 
