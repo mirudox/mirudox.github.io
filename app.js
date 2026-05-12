@@ -283,8 +283,15 @@ function selectAnswer(optIdx) {
 //  NAVIGATION
 // ══════════════════════════════════════════════════════
 function navigate(dir) {
-  current = Math.max(0, Math.min(questions.length - 1, current + dir));
-  renderQuestion();
+  if (dir === 1 && current === questions.length - 1) {
+    // Last question and clicked "शेवट" → submit
+    confirmSubmit();
+  } else {
+    // Normal navigation
+    current = Math.max(0, Math.min(questions.length - 1, current + dir));
+    renderQuestion();
+  }
+}
 }
 
 // ══════════════════════════════════════════════════════
