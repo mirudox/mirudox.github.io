@@ -10,6 +10,7 @@ var timerInterval = null;
 var timerSeconds = 0;
 var reviewMode = false;
 var savedMode = 'practice';   // default mode
+var currentQuestionBank = ALL_QUESTIONS;   // Paper 1 by default
 var TIMERS = {
   practice: 0,
   unit: 0        // dynamic – will be set in startExam
@@ -126,8 +127,7 @@ function startExam() {
   hideFloatingStart();
   savedMode = mode;
 
-  // Get pool from currentPaper (Paper 1 for now)
-  var pool = ALL_QUESTIONS.slice();
+  var pool = currentQuestionBank.slice();
 
   // If unit mode, filter by selected units
   if (mode === 'unit') {
@@ -517,11 +517,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function selectPaper(paper) {
   if (paper === 1) {
-    // Switch to Paper 1 home screen
+    currentQuestionBank = ALL_QUESTIONS;
     showScreen('home-screen');
   } else if (paper === 2) {
-    // Placeholder: show alert or do nothing for now
-    showModal('पेपर २ लवकरच उपलब्ध होईल!', function() {});
+    currentQuestionBank = PAPER2_QUESTIONS;
+    showScreen('home-screen');
   }
 }
 
