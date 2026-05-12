@@ -518,9 +518,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function selectPaper(paper) {
   if (paper === 1) {
     currentQuestionBank = ALL_QUESTIONS;
+    document.getElementById('home-screen-title').innerText = 'PET परीक्षा सराव (पेपर १)';
     showScreen('home-screen');
   } else if (paper === 2) {
     currentQuestionBank = PAPER2_QUESTIONS;
+    document.getElementById('home-screen-title').innerText = 'PET परीक्षा सराव (पेपर २ – सोलापूर)';
     showScreen('home-screen');
   }
 }
