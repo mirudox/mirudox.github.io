@@ -503,7 +503,7 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
 #floating-start .btn-start { padding: 14px 36px; font-size: 15px; }
 }
 
-/* Paper selection screen – full centering */
+/* Paper selection screen – consistent with home screen */
 #paper-select-screen {
   display: flex;
   flex-direction: column;
@@ -511,32 +511,75 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
   justify-content: center;
   min-height: 100vh;
   text-align: center;
-  padding: 20px;
+  padding: 40px 20px;
+  background: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(124,58,237,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167,139,250,0.10) 0%, transparent 55%);
+}
+
+#paper-select-screen .logo-ring {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: linear-gradient(var(--bg), var(--bg)) padding-box,
+              linear-gradient(135deg, var(--accent), var(--pink)) border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 40px rgba(167,139,250,0.3);
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
+#paper-select-screen h1 {
+  font-size: clamp(24px, 5vw, 38px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #e2e8f0 30%, var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+#paper-select-screen .subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+#paper-select-screen .love-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(244,114,182,0.15);
+  border: 1px solid rgba(244,114,182,0.3);
+  color: var(--pink);
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-size: 13px;
+  margin-bottom: 36px;
 }
 
 .paper-select-grid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   width: 100%;
-  max-width: 400px;
-  margin: 30px auto;
-  align-items: center;
+  max-width: 380px;
+  margin: 0 auto;
 }
 
 .paper-card {
-  width: 100%;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 28px 20px;
+  border-radius: 16px;
+  padding: 24px 20px;
   cursor: pointer;
   transition: all 0.25s ease;
   text-align: center;
-  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
-
-/* Rest of paper-card styles remain the same */
 
 .paper-card::before {
   content: '';
@@ -544,14 +587,14 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   background: linear-gradient(90deg, var(--accent), var(--pink));
   opacity: 0;
   transition: opacity 0.25s;
 }
 
 .paper-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: var(--accent);
 }
 
@@ -560,22 +603,23 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
 }
 
 .paper-icon {
-  font-size: 48px;
+  font-size: 40px;
   margin-bottom: 12px;
 }
 
 .paper-card h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   background: linear-gradient(135deg, #e2e8f0, var(--accent3));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .paper-card p {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
+  margin: 0;
 }
 
 /* Back button on home screen */
