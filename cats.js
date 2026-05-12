@@ -331,26 +331,26 @@
       document.getElementById('bittu-bubble').classList.add('show');
     }, 3700);
 
-    // Step 3: Hide bubble after longer delay (~13000ms)
+    // Step 3: Hide bubble, walk out
     setTimeout(function () {
       document.getElementById('bittu-bubble').classList.remove('show');
-    }, 13000);   // changed from 8500 to 13000
+    }, 8500);
 
-    // Step 4: Walk out after bubble is hidden (give extra 500ms)
     setTimeout(function () {
       wrap.classList.remove('sitting');
       wrap.classList.add('walking');
       wrap.classList.remove('walk-in');
       wrap.classList.add('walk-out');
-    }, 13500);   // changed from 9200 to 13500
+    }, 9200);
 
-    // Step 5: Reset for next visit
+    // Step 4: Reset for next visit
     setTimeout(function () {
       wrap.style.display = 'none';
       wrap.classList.remove('walking', 'sitting', 'walk-out');
       wrap.style.left = '-120px';
       bittuShown = false;
-    }, 17000);   // adjust final cleanup (13500 + 3500 walk)
+    }, 12000);
+  }
 
   // ── BLINK EYES (home screen only) ──────────────────
   function showBlinkEyes(show) {
@@ -384,9 +384,9 @@
     }
   }
 
-  // ── RESULT CHEER (80% of questions ANSWERED) ────────────
-  function showBittuCheer(answeredRatio) {
-    if (answeredRatio >= 0.8) {
+  // ── RESULT CHEER (80%+) ────────────────────────────
+  function showBittuCheer(pct) {
+    if (pct >= 80) {
       // Insert cheer above result title
       var hero = document.querySelector('.result-hero');
       if (hero && !hero.contains(cheer)) {
@@ -394,6 +394,7 @@
       }
       cheer.style.display = 'block';
       launchPawConfetti();
+
       // Second wave of confetti
       setTimeout(launchPawConfetti, 1500);
     } else {
@@ -421,20 +422,12 @@
     }
 
     if (id === 'result-screen') {
+      // Read score from DOM after showResults has painted
       setTimeout(function () {
-        // Use the global answers and questions objects (from app.js)
-        if (typeof questions !== 'undefined' && typeof answers !== 'undefined') {
-          var answeredCount = Object.keys(answers).length;
-          var totalQuestions = questions.length;
-          var answeredRatio = answeredCount / totalQuestions;
-          showBittuCheer(answeredRatio);
-        } else {
-          // fallback to old pct (just in case)
-          var pctEl = document.getElementById('res-pct');
-          if (pctEl) {
-            var pct = parseInt(pctEl.textContent, 10);
-            showBittuCheer(pct / 100);
-          }
+        var pctEl = document.getElementById('res-pct');
+        if (pctEl) {
+          var pct = parseInt(pctEl.textContent, 10);
+          showBittuCheer(pct);
         }
       }, 400);
     } else {
