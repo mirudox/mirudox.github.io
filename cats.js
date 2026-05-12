@@ -443,4 +443,121 @@
     }
   });
 
+  // ── NEW: Bittu encouragement for exam screen (80% answered) ──
+// This does NOT interfere with the original walking cat.
+
+function showExamBittu() {
+  // Create a temporary wrapper (different ID to avoid conflict)
+  var tempWrap = document.createElement('div');
+  tempWrap.id = 'bittu-exam-wrap';
+  tempWrap.style.cssText = `
+    position: fixed;
+    bottom: 90px;
+    left: -120px;
+    z-index: 7000;
+    display: block;
+    pointer-events: none;
+    transition: left 3s cubic-bezier(0.4, 0, 0.6, 1);
+  `;
+  tempWrap.innerHTML = `
+    <svg class="bittu-cat" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tail -->
+      <g id="bittu-tail-exam">
+        <path d="M62 58 Q78 45 72 32 Q68 26 64 32 Q70 42 58 52Z"
+              fill="#e8956d" stroke="#c97a52" stroke-width="0.8"/>
+      </g>
+      <!-- Body -->
+      <ellipse cx="38" cy="55" rx="24" ry="20" fill="#f5f0e8" stroke="#e0d8cc" stroke-width="0.8"/>
+      <ellipse cx="46" cy="58" rx="12" ry="10" fill="#e8956d" opacity="0.7"/>
+      <ellipse cx="38" cy="32" rx="19" ry="17" fill="#f5f0e8" stroke="#e0d8cc" stroke-width="0.8"/>
+      <ellipse cx="44" cy="28" rx="10" ry="8" fill="#e8956d" opacity="0.65"/>
+      <polygon points="22,20 17,6 30,16" fill="#f5f0e8" stroke="#e0d8cc" stroke-width="0.8"/>
+      <polygon points="23,19 19,9 29,17" fill="#f4a0a0" opacity="0.6"/>
+      <polygon points="48,18 52,5 57,19" fill="#e8956d" stroke="#c97a52" stroke-width="0.8"/>
+      <polygon points="49,18 53,9 55,18" fill="#f4a0a0" opacity="0.6"/>
+      <g id="bittu-eye-exam-l" style="transform-origin: 30px 30px;">
+        <ellipse cx="30" cy="30" rx="4.5" ry="4" fill="#2d1b4e"/>
+        <ellipse cx="31.5" cy="28.5" rx="1.5" ry="1.5" fill="white" opacity="0.8"/>
+        <path d="M25.5 30 Q30 26.5 34.5 30" fill="none" stroke="#c8a882" stroke-width="1"/>
+      </g>
+      <g id="bittu-eye-exam-r" style="transform-origin: 46px 30px;">
+        <ellipse cx="46" cy="30" rx="4.5" ry="4" fill="#2d1b4e"/>
+        <ellipse cx="47.5" cy="28.5" rx="1.5" ry="1.5" fill="white" opacity="0.8"/>
+        <path d="M41.5 30 Q46 26.5 50.5 30" fill="none" stroke="#c8a882" stroke-width="1"/>
+      </g>
+      <polygon points="38,36 36,38.5 40,38.5" fill="#f4a0a0"/>
+      <path d="M36,38.5 Q34,41 32,40" fill="none" stroke="#c8a882" stroke-width="1" stroke-linecap="round"/>
+      <path d="M40,38.5 Q42,41 44,40" fill="none" stroke="#c8a882" stroke-width="1" stroke-linecap="round"/>
+      <line x1="18" y1="36" x2="33" y2="38" stroke="#c8a882" stroke-width="0.8" opacity="0.7"/>
+      <line x1="17" y1="39" x2="32" y2="39" stroke="#c8a882" stroke-width="0.8" opacity="0.7"/>
+      <line x1="18" y1="42" x2="33" y2="40" stroke="#c8a882" stroke-width="0.8" opacity="0.7"/>
+      <line x1="58" y1="36" x2="43" y2="38" stroke="#c8a882" stroke-width="0.8" opacity="0.7"/>
+      <line x1="59" y1="39" x2="44" y2="39" stroke="#c8a882" stroke-width="0.8" opacity="0.7"/>
+      <line x1="58" y1="42" x2="43" y2="40" stroke="#c8a882" stroke-width="0.8" opacity="0.7"/>
+      <ellipse cx="28" cy="73" rx="7" ry="5" fill="#f5f0e8" stroke="#e0d8cc" stroke-width="0.8"/>
+      <ellipse cx="44" cy="73" rx="7" ry="5" fill="#e8956d" stroke="#c97a52" stroke-width="0.8"/>
+      <ellipse cx="25" cy="75" rx="2" ry="1.5" fill="#e0d8cc"/>
+      <ellipse cx="28" cy="76" rx="2" ry="1.5" fill="#e0d8cc"/>
+      <ellipse cx="31" cy="75" rx="2" ry="1.5" fill="#e0d8cc"/>
+      <ellipse cx="41" cy="75" rx="2" ry="1.5" fill="#c97a52"/>
+      <ellipse cx="44" cy="76" rx="2" ry="1.5" fill="#c97a52"/>
+      <ellipse cx="47" cy="75" rx="2" ry="1.5" fill="#c97a52"/>
+    </svg>
+    <div id="bittu-exam-bubble" style="
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      background: linear-gradient(135deg, #1a1530ee, #221d3aee);
+      border: 1.5px solid rgba(167,139,250,0.5);
+      border-radius: 18px;
+      padding: 12px 16px;
+      width: 240px;
+      text-align: center;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      color: #e2e8f0;
+      font-size: 13px;
+      line-height: 1.6;
+      box-shadow: 0 8px 32px rgba(124,58,237,0.4);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      pointer-events: none;
+    ">
+      <div style="font-size:11px; color:#f472b6; margin-bottom:4px;">🐱 बिट्टू</div>
+      खूप छान, Luna! 🎉<br>
+      तू एकूण प्रश्नांपैकी ८०% पूर्ण केलेस!<br>
+      असाच पुढे जा. मी पॉटरसोबत तुझ्यासाठी गर्व आहे. 💜
+      <div style="font-size:16px; margin-top:5px; animation: heart-beat 1.2s infinite;">🧡</div>
+    </div>
+  `;
+  document.body.appendChild(tempWrap);
+
+  // Walk in
+  requestAnimationFrame(() => {
+    tempWrap.style.left = 'calc(50% - 40px)';
+  });
+
+  // Show bubble after a short delay
+  const bubble = document.getElementById('bittu-exam-bubble');
+  setTimeout(() => {
+    bubble.style.transform = 'translateX(-50%) scale(1)';
+    bubble.style.opacity = '1';
+  }, 350);
+
+  // Hide bubble after 4 seconds
+  setTimeout(() => {
+    bubble.style.transform = 'translateX(-50%) scale(0)';
+    bubble.style.opacity = '0';
+  }, 4000);
+
+  // Walk out after bubble disappears
+  setTimeout(() => {
+    tempWrap.style.left = 'calc(100% + 120px)';
+  }, 4700);
+
+  // Remove the element after animation finishes
+  setTimeout(() => {
+    tempWrap.remove();
+  }, 8000);
+}
 })();
