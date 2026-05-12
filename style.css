@@ -502,3 +502,89 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
 .btn-nav { padding: 9px 12px; font-size: 11px; }
 #floating-start .btn-start { padding: 14px 36px; font-size: 15px; }
 }
+
+/* Paper selection screen */
+.paper-select-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  width: 100%;
+  margin: 30px auto;
+}
+
+.paper-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.paper-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--pink));
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.paper-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.paper-card:hover::before {
+  opacity: 1;
+}
+
+.paper-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.paper-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #e2e8f0, var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.paper-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Back button on home screen */
+.back-to-papers {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-to-papers:hover {
+  border-color: var(--accent);
+  color: var(--accent3);
+}
