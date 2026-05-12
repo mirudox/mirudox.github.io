@@ -514,3 +514,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+function selectPaper(paper) {
+  if (paper === 1) {
+    // Switch to Paper 1 home screen
+    showScreen('home-screen');
+  } else if (paper === 2) {
+    // Placeholder: show alert or do nothing for now
+    showModal('पेपर २ लवकरच उपलब्ध होईल!', function() {});
+  }
+}
+
+function goToPaperSelect() {
+  // Reset any exam state and go back to paper selection
+  resetHomeState();
+  showScreen('paper-select-screen');
+}
