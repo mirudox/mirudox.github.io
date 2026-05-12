@@ -69,6 +69,10 @@ box-shadow: 0 0 40px rgba(167,139,250,0.3);
 animation: pulse-ring 3s ease-in-out infinite;
 }
 
+#home-screen .logo-ring {
+  margin-top: 60px;
+}
+
 @keyframes pulse-ring {
 0%,100% { box-shadow: 0 0 40px rgba(167,139,250,0.3); }
 50%      { box-shadow: 0 0 70px rgba(167,139,250,0.6); }
