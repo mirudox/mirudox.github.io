@@ -648,3 +648,11 @@ box-shadow: 0 4px 16px rgba(124,58,237,0.4);
   color: var(--accent3);
   background: var(--surface2);
 }
+
+.paper-subtitle {
+  font-size: 0.9rem;
+  color: var(--accent3);
+  margin-top: -8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
