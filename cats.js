@@ -367,42 +367,45 @@
     bittuShown = false;
   }
 
-  function showBittu() {
-    if (bittuShown) return;
-    bittuShown = true;
+ function showBittu() {
+  if (bittuShown) return;
+  bittuShown = true;
 
-    // Reset inline style so CSS transitions work again
-    wrap.style.cssText = 'position:fixed;bottom:90px;left:-120px;z-index:5000;display:block;pointer-events:none;';
+  wrap.style.cssText = 'position:fixed;bottom:90px;left:-120px;z-index:5000;display:block;pointer-events:none;';
+  wrap.classList.add('walking');
+
+  bittuTimers.push(setTimeout(function () {
+    wrap.style.left = '';
+    wrap.classList.add('walk-in');
+  }, 200));
+
+  bittuTimers.push(setTimeout(function () {
+    wrap.classList.remove('walking');
+    wrap.classList.add('sitting');
+  }, 4000));
+
+  bittuTimers.push(setTimeout(function () {
+    var b = document.getElementById('bittu-bubble');
+    if (b) b.classList.add('show');
+  }, 4600));
+
+  bittuTimers.push(setTimeout(function () {
+    var b = document.getElementById('bittu-bubble');
+    if (b) b.classList.remove('show');
+  }, 14000));
+
+  bittuTimers.push(setTimeout(function () {
+    wrap.classList.remove('sitting');
     wrap.classList.add('walking');
+    wrap.classList.remove('walk-in');
+    wrap.classList.add('walk-out');
+  }, 15000));
 
-    bittuTimers.push(setTimeout(function () {
-      wrap.classList.add('walk-in');
-    }, 100));
+  bittuTimers.push(setTimeout(function () {
+    hardResetBittu();
+  }, 18000));
+}
 
-    bittuTimers.push(setTimeout(function () {
-      wrap.classList.remove('walking');
-      wrap.classList.add('sitting');
-      var b = document.getElementById('bittu-bubble');
-      if (b) b.classList.add('show');
-    }, 3700));
-
-    // Bubble visible ~9.8s after sitting
-    bittuTimers.push(setTimeout(function () {
-      var b = document.getElementById('bittu-bubble');
-      if (b) b.classList.remove('show');
-    }, 13500));
-
-    bittuTimers.push(setTimeout(function () {
-      wrap.classList.remove('sitting');
-      wrap.classList.add('walking');
-      wrap.classList.remove('walk-in');
-      wrap.classList.add('walk-out');
-    }, 14500));
-
-    bittuTimers.push(setTimeout(function () {
-      hardResetBittu();
-    }, 17500));
-  }
 
   // ── EXAM PEEK ───────────────────────────────────────
   var examPeekShown = false;
