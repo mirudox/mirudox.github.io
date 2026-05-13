@@ -284,8 +284,10 @@ function selectAnswer(optIdx) {
   answers[current] = optIdx;
   renderQuestion();
 }
-  renderQuestion();
-}
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+
 
 // ══════════════════════════════════════════════════════
 //  NAVIGATION
