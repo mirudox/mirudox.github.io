@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Sampling Simulator - Photo Edition</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 2em;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #8892b0;
+            margin-bottom: 30px;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .canvas-wrapper {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 320px;
+            max-width: 520px;
+        }
+        
+        .canvas-title {
+            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #64ffda;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .canvas-inner {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        #originalCanvas {
+            cursor: crosshair;
+        }
+        
+        .drop-zone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(26, 26, 46, 0.9);
+            color: #8892b0;
+            font-size: 1.2em;
+            transition: all 0.3s;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 10;
+        }
+        
+        .drop-zone.active {
+            opacity: 1;
+        }
+        
+        .drop-zone-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #64ffda;
+        }
+        
+        .controls-panel {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-label {
+            color: #64ffda;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        .image-source-section {
+            margin-bottom: 25px;
+        }
+        
+        .image-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .upload-btn {
+            position: relative;
+            overflow: hidden;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #64ffda, #00b4d8);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(100, 255, 218, 0.3);
+        }
+        
+        .upload-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .sample-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .sample-thumb {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .sample-thumb:hover {
+            border-color: #64ffda;
+            transform: scale(1.05);
+        }
+        
+        .sample-thumb.active {
+            border-color: #64ffda;
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
+        }
+        
+        .sample-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .sample-thumb .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64ffda;
+        }
+        
+        .slider-section {
+            margin-bottom: 20px;
+        }
+        
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .slider-label {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        
+        .slider-value {
+            color: #64ffda;
+            font-weight: 700;
+            font-size: 1.1em;
+            background: rgba(100, 255, 218, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #1a1a2e, #64ffda);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+            transition: transform 0.2s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        
+        .tick-marks {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: #8892b0;
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            gap: 5px;
+            background: rgba(255,255,255,0.05);
+            padding: 5px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            color: #8892b0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            background: rgba(100, 255, 218, 0.15);
+            color: #64ffda;
+        }
+        
+        .draw-controls {
+            display: none;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .draw-controls.visible {
+            display: flex;
+        }
+        
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .color-btn:hover, .color-btn.active {
+            border-color: #64ffda;
+            transform: scale(1.1);
+        }
+        
+        .brush-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+        
+        .brush-control input[type="range"] {
+            width: 100px;
+        }
+        
+        .explanation {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            line-height: 1.8;
+            backdrop-filter: blur(10px);
+        }
+        
+        .explanation h2 {
+            color: #64ffda;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .explanation p {
+            margin-bottom: 12px;
+        }
+        
+        .highlight {
+            color: #64ffda;
+            font-weight: 600;
+        }
+        
+        .insight-box {
+            background: rgba(100, 255, 218, 0.1);
+            border-left: 4px solid #64ffda;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        
+        .pixel-info {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        
+        .pixel-info strong {
+            color: #64ffda;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .canvas-wrapper {
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>2D Sampling Simulator</h1>
+    <p class="subtitle">See how real photographs become pixels — and why</p>
+    
+    <div class="container">
+        <div class="canvas-wrapper">
+            <div class="canvas-title">Original Image</div>
+            <div class="canvas-inner" id="dropZone">
+                <canvas id="originalCanvas" width="480" height="360"></canvas>
+                <div class="drop-zone" id="dropOverlay">
+                    <div class="drop-zone-icon">📷</div>
+                    <div>Drop image here</div>
+                </div>
+            </div>
+            <div class="pixel-info" id="originalInfo">
+                <strong>480 × 360</strong> = 172,800 original pixels
+            </div>
+        </div>
+        
+        <div class="canvas-wrapper">
+            <div class="canvas-title">Sampled Version</div>
+            <div class="canvas-inner">
+                <canvas id="sampledCanvas" width="480" height="360"></canvas>
+            </div>
+            <div class="pixel-info" id="sampledInfo">
+                Sampling at: <strong>1 × 1 = 1 pixel</strong>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls-panel">
+        <div class="image-source-section">
+            <div class="section-label">Image Source</div>
+            <div class="image-buttons">
+                <label class="upload-btn">
+                    📁 Upload Your Photo
+                    <input type="file" id="fileInput" accept="image/*">
+                </label>
+                <div class="mode-toggle">
+                    <button class="mode-btn active" data-mode="image">Photo Mode</button>
+                    <button class="mode-btn" data-mode="draw">Draw Mode</button>
+                </div>
+            </div>
+            <div class="draw-controls" id="drawControls">
+                <button class="color-btn active" style="background: black;" data-color="black"></button>
+                <button class="color-btn" style="background: red;" data-color="red"></button>
+                <button class="color-btn" style="background: blue;" data-color="blue"></button>
+                <button class="color-btn" style="background: #64ffda;" data-color="#64ffda"></button>
+                <div class="brush-control">
+                    <span>Brush:</span>
+                    <input type="range" id="brushSize" min="1" max="40" value="12">
+                </div>
+            </div>
+            <div class="sample-grid" id="sampleGrid">
+                <!-- Sample images will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="slider-section">
+            <div class="section-label">Sampling Resolution</div>
+            <div class="slider-header">
+                <span class="slider-label">Pixels per side:</span>
+                <span class="slider-value" id="pixelValue">1 × 1</span>
+            </div>
+            <input type="range" id="pixelSlider" min="0" max="10" value="0" step="1">
+            <div class="tick-marks">
+                <span>1</span>
+                <span>2</span>
+                <span>4</span>
+                <span>8</span>
+                <span>16</span>
+                <span>32</span>
+                <span>64</span>
+                <span>128</span>
+                <span>256</span>
+                <span>384</span>
+                <span>480</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="explanation">
+        <h2>What You're Witnessing</h2>
+        <p>
+            At <span class="highlight">1×1</span>, the entire photo collapses into a single average color — one "measurement" trying to represent everything. A sunset, a face, a cityscape — all become the same muddy blob.
+        </p>
+        <p>
+            As you increase the resolution, notice <span class="highlight">when</span> the image becomes recognizable. That's the moment you have enough pixels to capture the variation that matters.
+        </p>
+        <div class="insight-box">
+            "The need for pixels did not come from engineering. It came from the image having variation. If there is no variation, one measurement is sufficient. If there is variation, one measurement cannot tell you where the variation occurred."
+        </div>
+        <p>
+            Compare a simple photo (like a solid sky) with a complex one (like a face or text). You'll see that complex images need higher resolution to become recognizable — because they have <span class="highlight">more variation that matters</span>.
+        </p>
+    </div>
+    
+    <script>
+        // Canvas setup
+        const originalCanvas = document.getElementById('originalCanvas');
+        const sampledCanvas = document.getElementById('sampledCanvas');
+        const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
+        const sampledCtx = sampledCanvas.getContext('2d');
+        
+        // Controls
+        const pixelSlider = document.getElementById('pixelSlider');
+        const pixelValue = document.getElementById('pixelValue');
+        const sampledInfo = document.getElementById('sampledInfo');
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const dropOverlay = document.getElementById('dropOverlay');
+        const drawControls = document.getElementById('drawControls');
+        const brushSizeSlider = document.getElementById('brushSize');
+        const sampleGrid = document.getElementById('sampleGrid');
+        
+        // State
+        let currentMode = 'image';
+        let isDrawing = false;
+        let brushColor = 'black';
+        let brushSize = 12;
+        let originalImageData = null;
+        
+        // Resolution steps
+        const resolutionSteps = [1, 2, 4, 8, 16, 32, 64, 128, 256, 384, 480];
+        
+        // Sample images from picsum
+        const sampleSeeds = [
+            { seed: 'face-portrait', label: 'Portrait' },
+            { seed: 'landscape-mountain', label: 'Landscape' },
+            { seed: 'city-skyline', label: 'City' },
+            { seed: 'nature-forest', label: 'Nature' },
+            { seed: 'cat-animal', label: 'Cat' },
+            { seed: 'food-plate', label: 'Food' }
+        ];
+        
+        // Initialize sample image grid
+        function initSampleGrid() {
+            sampleSeeds.forEach((sample, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'sample-thumb';
+                thumb.dataset.index = index;
+                thumb.innerHTML = `
+                    <img src="https://picsum.photos/seed/${sample.seed}/100/100.jpg" alt="${sample.label}" crossorigin="anonymous">
+                    <div class="loading">...</div>
+                `;
+                thumb.addEventListener('click', () => loadSampleImage(sample.seed, thumb));
+                sampleGrid.appendChild(thumb);
+            });
+        }
+        
+        // Load sample image
+        function loadSampleImage(seed, thumbElement) {
+            // Show loading state
+            document.querySelectorAll('.sample-thumb').forEach(t => t.classList.remove('active'));
+            if (thumbElement) thumbElement.classList.add('active');
+            
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                drawImageToCanvas(img);
+                // Remove loading indicator
+                if (thumbElement) {
+                    const loading = thumbElement.querySelector('.loading');
+                    if (loading) loading.style.display = 'none';
+                }
+            };
+            img.onerror = function() {
+                // Try alternate URL format
+                const img2 = new Image();
+                img2.crossOrigin = 'anonymous';
+                img2.onload = function() {
+                    drawImageToCanvas(img2);
+                };
+                img2.src = `https://picsum.photos/480/360?random=${Math.random()}`;
+            };
+            img.src = `https://picsum.photos/seed/${seed}/480/360.jpg`;
+        }
+        
+        // Draw image to canvas maintaining aspect ratio
+        function drawImageToCanvas(img) {
+            originalCtx.fillStyle = 'white';
+            originalCtx.fillRect(0, 0, originalCanvas.width, originalCanvas.height);
+            
+            // Calculate scaling to fit
+            const scale = Math.min(
+                originalCanvas.width / img.width,
+                originalCanvas.height / img.height
+            );
+            const x = (originalCanvas.width - img.width * scale) / 2;
+            const y = (originalCanvas.height - img.height * scale) / 2;
+            
+            originalCtx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            originalImageData = originalCtx.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+            updateSampledCanvas();
+        }
+        
+        // Handle file upload
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    document.querySelectorAll('.sample-thumb').forEach(t => t.classList.remove('active'));
+                    drawImageToCanvas(img);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        
+        // Drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropOverlay.classList.add('active');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropOverlay.classList.remove('active');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropOverlay.classList.remove('active');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+        
+        // Mode toggle
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentMode = this.dataset.mode;
+                
+                if (currentMode === 'draw') {
+                    drawControls.classList.add('visible');
+                    originalCanvas.style.cursor = 'crosshair';
+                } else {
+                    drawControls.classList.remove('visible');
+                    originalCanvas.style.cursor = 'default';
+                }
+            });
+        });
+        
+        // Color buttons
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                brushColor = this.dataset.color;
+            });
+        });
+        
+        // Brush size
+        brushSizeSlider.addEventListener('input', function() {
+            brushSize = parseInt(this.value);
+        });
+        
+        // Drawing functions
+        function getCanvasPos(e) {
+            const rect = originalCanvas.getBoundingClientRect();
+            const scaleX = originalCanvas.width / rect.width;
+            const scaleY = originalCanvas.height / rect.height;
+            
+            if (e.touches) {
+                return {
+                    x: (e.touches[0].clientX - rect.left) * scaleX,
+                    y: (e.touches[0].clientY - rect.top) * scaleY
+                };
+            }
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        }
+        
+        function drawAt(pos) {
+            originalCtx.fillStyle = brushColor;
+            originalCtx.beginPath();
+            originalCtx.arc(pos.x, pos.y, brushSize, 0, Math.PI * 2);
+            originalCtx.fill();
+            updateSampledCanvas();
+        }
+        
+        function startDraw(e) {
+            if (currentMode !== 'draw') return;
+            e.preventDefault();
+            isDrawing = true;
+            drawAt(getCanvasPos(e));
+        }
+        
+        function moveDraw(e) {
+            if (!isDrawing || currentMode !== 'draw') return;
+            e.preventDefault();
+            drawAt(getCanvasPos(e));
+        }
+        
+        function stopDraw() {
+            isDrawing = false;
+        }
+        
+        originalCanvas.addEventListener('mousedown', startDraw);
+        originalCanvas.addEventListener('mousemove', moveDraw);
+        originalCanvas.addEventListener('mouseup', stopDraw);
+        originalCanvas.addEventListener('mouseleave', stopDraw);
+        originalCanvas.addEventListener('touchstart', startDraw, { passive: false });
+        originalCanvas.addEventListener('touchmove', moveDraw, { passive: false });
+        originalCanvas.addEventListener('touchend', stopDraw);
+        
+        // Update sampled canvas
+        function updateSampledCanvas() {
+            const stepIndex = parseInt(pixelSlider.value);
+            const pixelCount = resolutionSteps[stepIndex];
+            
+            // Get current image data
+            const imageData = originalCtx.getImageData(0, 0, originalCanvas.width, originalCanvas.height);
+            const data = imageData.data;
+            const width = originalCanvas.width;
+            const height = originalCanvas.height;
+            
+            // Clear sampled canvas
+            sampledCtx.clearRect(0, 0, sampledCanvas.width, sampledCanvas.height);
+            
+            const cellWidth = width / pixelCount;
+            const cellHeight = height / pixelCount;
+            const outCellWidth = sampledCanvas.width / pixelCount;
+            const outCellHeight = sampledCanvas.height / pixelCount;
+            
+            // Sample each cell
+            for (let i = 0; i < pixelCount; i++) {
+                for (let j = 0; j < pixelCount; j++) {
+                    const startX = Math.floor(i * cellWidth);
+                    const startY = Math.floor(j * cellHeight);
+                    const endX = Math.min(Math.floor((i + 1) * cellWidth), width);
+                    const endY = Math.min(Math.floor((j + 1) * cellHeight), height);
+                    
+                    let totalR = 0, totalG = 0, totalB = 0, count = 0;
+                    
+                    // Sample every nth pixel for performance at high resolutions
+                    const stepX = Math.max(1, Math.floor((endX - startX) / 8));
+                    const stepY = Math.max(1, Math.floor((endY - startY) / 8));
+                    
+                    for (let x = startX; x < endX; x += stepX) {
+                        for (let y = startY; y < endY; y += stepY) {
+                            const idx = (y * width + x) * 4;
+                            totalR += data[idx];
+                            totalG += data[idx + 1];
+                            totalB += data[idx + 2];
+                            count++;
+                        }
+                    }
+                    
+                    const avgR = Math.round(totalR / count);
+                    const avgG = Math.round(totalG / count);
+                    const avgB = Math.round(totalB / count);
+                    
+                    sampledCtx.fillStyle = `rgb(${avgR},${avgG},${avgB})`;
+                    sampledCtx.fillRect(
+                        i * outCellWidth,
+                        j * outCellHeight,
+                        Math.ceil(outCellWidth),
+                        Math.ceil(outCellHeight)
+                    );
+                    
+                    // Draw grid lines for low resolutions
+                    if (pixelCount <= 64) {
+                        sampledCtx.strokeStyle = `rgba(100, 255, 218, ${pixelCount <= 16 ? 0.4 : 0.15})`;
+                        sampledCtx.lineWidth = pixelCount <= 8 ? 2 : 1;
+                        sampledCtx.strokeRect(
+                            i * outCellWidth,
+                            j * outCellHeight,
+                            Math.ceil(outCellWidth),
+                            Math.ceil(outCellHeight)
+                        );
+                    }
+                }
+            }
+            
+            // Update display
+            const totalPixels = pixelCount * pixelCount;
+            pixelValue.textContent = `${pixelCount} × ${pixelCount}`;
+            sampledInfo.innerHTML = `Sampling at: <strong>${pixelCount} × ${pixelCount} = ${totalPixels.toLocaleString()} pixels</strong>`;
+        }
+        
+        // Slider event
+        pixelSlider.addEventListener('input', updateSampledCanvas);
+        
+        // Initialize with a gradient as placeholder
+        function initPlaceholder() {
+            const gradient = originalCtx.createLinearGradient(0, 0, originalCanvas.width, originalCanvas.height);
+            gradient.addColorStop(0, '#2c3e50');
+            gradient.addColorStop(0.5, '#3498db');
+            gradient.addColorStop(1, '#2c3e50');
+            originalCtx.fillStyle = gradient;
+            originalCtx.fillRect(0, 0, originalCanvas.width, originalCanvas.height);
+            
+            originalCtx.fillStyle = 'rgba(255,255,255,0.1)';
+            originalCtx.font = '20px Segoe UI';
+            originalCtx.textAlign = 'center';
+            originalCtx.fillText('Upload a photo or select a sample below', originalCanvas.width/2, originalCanvas.height/2 - 10);
+            originalCtx.fillText('to see how pixels work', originalCanvas.width/2, originalCanvas.height/2 + 20);
+            
+            updateSampledCanvas();
+        }
+        
+        // Initialize
+        initSampleGrid();
+        initPlaceholder();
+    </script>
+</body>
+</html>
