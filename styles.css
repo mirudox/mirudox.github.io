@@ -467,29 +467,28 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================================
-   VALIDITY BADGES + LEGEND
+   VALIDITY — CORNER RIBBON + LEGEND
    ============================================================ */
-.validity-badge {
+.corner-ribbon {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 999px;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 64px 64px 0;
+  border-color: transparent transparent transparent transparent;
+  z-index: 2;
 }
-.validity-lifetime  { background: rgba(94, 234, 212, 0.18); color: #0F766E; }
-.validity-renewable { background: rgba(251, 191, 36, 0.20); color: #92400E; }
-.validity-expiring  { background: rgba(248, 113, 113, 0.20); color: #B91C1C; }
+.corner-ribbon.lifetime  { border-color: transparent #0F766E transparent transparent; }
+.corner-ribbon.renewable { border-color: transparent #B45309 transparent transparent; }
+.corner-ribbon.expiring  { border-color: transparent #B91C1C transparent transparent; }
 
 .legend {
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
-  margin-bottom: 32px;
+  margin-bottom: 14px;
   font-family: var(--mono);
   font-size: 12px;
   color: var(--mist);
@@ -497,11 +496,18 @@ img { max-width: 100%; display: block; }
 .legend-item { display: flex; align-items: center; gap: 7px; }
 .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
 .legend-dot.lifetime  { background: #0F766E; }
-.legend-dot.renewable { background: #92400E; }
+.legend-dot.renewable { background: #B45309; }
 .legend-dot.expiring  { background: #B91C1C; }
 
+.flip-instruction {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mist);
+  margin-bottom: 28px;
+}
+
 /* ============================================================
-   FLIP CARDS
+   FLIP CARDS (uniform, all certificate cards use this)
    ============================================================ */
 .flip-wrap {
   perspective: 1400px;
@@ -509,7 +515,7 @@ img { max-width: 100%; display: block; }
 }
 .flip-card {
   position: relative;
-  min-height: 260px;
+  min-height: 240px;
   transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
   transform-style: preserve-3d;
 }
@@ -525,20 +531,22 @@ img { max-width: 100%; display: block; }
   padding: 26px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .flip-back { transform: rotateY(180deg); }
 
-.flip-hint {
+.flip-back-label {
   font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--mist);
-  margin-top: auto;
-  padding-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
 }
 
 .verify-link {
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--accent);
   word-break: break-all;
 }
