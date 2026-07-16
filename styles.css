@@ -41,6 +41,12 @@ body {
   color: var(--slate);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  /* Add these 3 lines to enable the sticky footer: */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 }
 
 a { color: inherit; text-decoration: none; }
@@ -534,6 +540,10 @@ a.verify-link:hover { color: #0F766E; }
   background: var(--ink);
   color: rgba(245, 251, 250, 0.6);
   padding: 44px 0;
+  /* Add this line to push the footer to the bottom: */
+  margin-top: auto;
+}
+
 }
 .site-footer .wrap {
   display: flex;
