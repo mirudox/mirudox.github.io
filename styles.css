@@ -560,18 +560,19 @@ a.verify-link:hover { color: #0F766E; }
 
 .footer-right {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
+  flex-direction: column; /* Forces the text to stack directly above the icons */
+  align-items: flex-start; /* Keeps the text and icons neatly aligned on the left edge of their box */
+  gap: 16px; /* Adds that vertical padding between the text and the icons */
 }
 
 .connect-label {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 14px; /* Increased the font size (was 12px) */
   color: rgba(245, 251, 250, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+
 
 /* Spaced out icons */
 .social-icons {
