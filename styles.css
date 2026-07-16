@@ -540,25 +540,67 @@ a.verify-link:hover { color: #0F766E; }
   background: var(--ink);
   color: rgba(245, 251, 250, 0.6);
   padding: 44px 0;
-  /* Add this line to push the footer to the bottom: */
-  margin-top: auto;
+  margin-top: auto; /* Keeps the footer at the bottom of short pages */
 }
 
-}
 .site-footer .wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 24px;
 }
+
+/* Connection Section */
+.foot-connect {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.connect-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: rgba(245, 251, 250, 0.9);
+}
+
+.social-icons {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+/* Icon Link Styling & Color Override */
+.social-icons a {
+  color: rgba(245, 251, 250, 0.6); /* Light, readable grey color */
+  font-size: 18px; /* Size of the icons */
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+}
+
+/* Hover effect */
+.social-icons a:hover,
+.social-icons a:focus-visible {
+  color: var(--cyan); /* Turns your signature cyan on hover */
+  transform: translateY(-2px); /* Slight jump effect to indicate clickability */
+  outline: none;
+}
+
 .site-footer .foot-mark {
   font-family: var(--mono);
   font-size: 12.5px;
-  color: rgba(245, 251, 250, 0.8);
+  color: rgba(245, 251, 250, 0.5);
 }
-.foot-links { display: flex; gap: 18px; font-family: var(--mono); font-size: 12.5px; }
-.foot-links a:hover { color: var(--cyan); }
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 768px) {
+  .site-footer .wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 
 /* ============================================================
    RESPONSIVE
