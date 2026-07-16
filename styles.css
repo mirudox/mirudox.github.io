@@ -390,29 +390,18 @@ img { max-width: 100%; display: block; }
 }
 a.verify-link:hover { color: #0F766E; }
 
-/* AVIXA "in progress" glow — draws the eye without shouting */
-.glow-wrap {
-  position: relative;
-}
-.glow-wrap::before {
-  content: '';
-  position: absolute;
-  inset: -16px;
-  background: radial-gradient(ellipse at center, rgba(94, 234, 212, 0.55), transparent 70%);
-  filter: blur(20px);
-  z-index: 0;
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-.glow-wrap .cert-card {
-  position: relative;
-  z-index: 1;
+/* AVIXA "in progress" glow — draws the eye without shouting.
+   Uses box-shadow (not a pseudo-element) since box-shadow is never
+   clipped by the element's own overflow:hidden, unlike ::before content. */
+.cert-card.glow-card {
+  animation: glow-pulse 2.6s ease-in-out infinite;
 }
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%, 100% { box-shadow: 0 0 22px 3px rgba(94, 234, 212, 0.35); }
+  50%      { box-shadow: 0 0 48px 14px rgba(94, 234, 212, 0.7); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .glow-wrap::before { animation: none; opacity: 0.8; }
+  .cert-card.glow-card { animation: none; box-shadow: 0 0 40px 10px rgba(94, 234, 212, 0.55); }
 }
 
 /* Plain (non-flip) card — used on Projects page */
