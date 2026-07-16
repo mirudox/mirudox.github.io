@@ -391,24 +391,28 @@ img { max-width: 100%; display: block; }
 a.verify-link:hover { color: #0F766E; }
 
 /* AVIXA "in progress" glow — draws the eye without shouting */
-.cert-card.glow-card {
+.glow-wrap {
   position: relative;
 }
-.cert-card.glow-card::before {
+.glow-wrap::before {
   content: '';
   position: absolute;
-  inset: -14px;
-  background: radial-gradient(ellipse at center, rgba(94, 234, 212, 0.35), transparent 70%);
-  filter: blur(18px);
-  z-index: -1;
+  inset: -16px;
+  background: radial-gradient(ellipse at center, rgba(94, 234, 212, 0.55), transparent 70%);
+  filter: blur(20px);
+  z-index: 0;
   animation: glow-pulse 3s ease-in-out infinite;
 }
+.glow-wrap .cert-card {
+  position: relative;
+  z-index: 1;
+}
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 0.95; }
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cert-card.glow-card::before { animation: none; opacity: 0.75; }
+  .glow-wrap::before { animation: none; opacity: 0.8; }
 }
 
 /* Plain (non-flip) card — used on Projects page */
@@ -589,11 +593,21 @@ a.verify-link:hover { color: #0F766E; }
 .corner-ribbon.renewable { border-color: transparent #D97706 transparent transparent; }
 .corner-ribbon.expiring  { border-color: transparent #B91C1C transparent transparent; }
 
+.legend-block {
+  margin: 0 auto 48px;
+  padding: 26px 32px;
+  max-width: 620px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
 .legend {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 22px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   font-family: var(--mono);
   font-size: 13px;
   color: var(--slate);
@@ -613,11 +627,7 @@ a.verify-link:hover { color: #0F766E; }
   font-family: var(--mono);
   font-size: 12.5px;
   color: var(--mist);
-  margin-bottom: 0;
-}
-
-.legend-block {
-  margin-bottom: 44px;
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--line);
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
 }
