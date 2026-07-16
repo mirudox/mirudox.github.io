@@ -540,67 +540,74 @@ a.verify-link:hover { color: #0F766E; }
   background: var(--ink);
   color: rgba(245, 251, 250, 0.6);
   padding: 44px 0;
-  margin-top: auto; /* Keeps the footer at the bottom of short pages */
+  margin-top: auto; 
 }
 
-.site-footer .wrap {
+/* New Split Layout Container */
+.footer-layout {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Pushes left and right sides apart */
   align-items: center;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 32px;
 }
 
-/* Connection Section */
-.foot-connect {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.connect-label {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: rgba(245, 251, 250, 0.9);
-}
-
-.social-icons {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-}
-
-/* Icon Link Styling & Color Override */
-.social-icons a {
-  color: rgba(245, 251, 250, 0.6); /* Light, readable grey color */
-  font-size: 18px; /* Size of the icons */
-  text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
-  display: inline-flex;
-}
-
-/* Hover effect */
-.social-icons a:hover,
-.social-icons a:focus-visible {
-  color: var(--cyan); /* Turns your signature cyan on hover */
-  transform: translateY(-2px); /* Slight jump effect to indicate clickability */
-  outline: none;
-}
-
-.site-footer .foot-mark {
+.footer-left .foot-mark {
   font-family: var(--mono);
   font-size: 12.5px;
   color: rgba(245, 251, 250, 0.5);
 }
 
-/* Responsive adjustment for smaller screens */
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.connect-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: rgba(245, 251, 250, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Spaced out icons */
+.social-icons {
+  display: flex;
+  gap: 26px; /* Increased gap to fix the cramped look */
+  align-items: center;
+}
+
+/* Force override the blue default links */
+.social-icons a {
+  color: rgba(245, 251, 250, 0.7) !important; 
+  font-size: 20px; /* Slightly larger icons */
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+}
+
+.social-icons a:hover,
+.social-icons a:focus-visible {
+  color: var(--cyan) !important; /* Turns cyan on hover */
+  transform: translateY(-3px);
+  outline: none;
+}
+
+/* Mobile Responsiveness: Stacks nicely on phones */
 @media (max-width: 768px) {
-  .site-footer .wrap {
-    flex-direction: column;
-    align-items: flex-start;
+  .footer-layout {
+    flex-direction: column-reverse; /* Puts copyright on bottom, icons on top */
+    align-items: center;
+    text-align: center;
+  }
+  .footer-right {
+    justify-content: center;
   }
 }
+
 
 /* ============================================================
    RESPONSIVE
