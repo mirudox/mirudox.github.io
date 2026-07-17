@@ -763,6 +763,90 @@ a.verify-link:hover { color: #0F766E; }
   }
 }
 
+/* ============================================================
+   LEARNING PATH TIMELINE
+   ============================================================ */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.timeline-item {
+  position: relative;
+}
+
+/* The Connecting Line */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 24px; 
+  left: -26px; 
+  width: 2px;
+  height: calc(100% + 16px);
+  background: var(--cyan);
+}
+
+/* Hide the line after the very last item */
+.timeline-item:last-child::before {
+  display: none;
+}
+
+/* The Path into the Future (Dashed Line) */
+.timeline-item.current::before,
+.timeline-item.future::before {
+  background: transparent;
+  border-left: 2px dashed rgba(94, 234, 212, 0.35);
+}
+
+/* The Dots (Nodes) */
+.timeline-marker {
+  position: absolute;
+  left: -32px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  z-index: 2;
+}
+
+/* Current Node: Glowing and Pulsing */
+.timeline-item.current .timeline-marker {
+  background: var(--ink);
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 12px rgba(94, 234, 212, 0.8);
+  transform: scale(1.3);
+  animation: pulseNode 3s infinite alternate;
+}
+
+/* Future Node: Hollow and Faded */
+.timeline-item.future .timeline-marker {
+  background: var(--ink);
+  border: 2px solid rgba(94, 234, 212, 0.35);
+}
+
+/* Text Styling */
+.timeline-content h3 {
+  font-size: 1.15rem;
+  color: #F5FBFA;
+  margin-bottom: 6px;
+  font-family: var(--display);
+}
+
+.timeline-content p {
+  font-size: 0.95rem;
+  color: var(--mist);
+  line-height: 1.5;
+}
+
+@keyframes pulseNode {
+  0% { box-shadow: 0 0 8px rgba(94, 234, 212, 0.5); }
+  100% { box-shadow: 0 0 16px rgba(94, 234, 212, 1); }
+}
 
 /* ============================================================
    RESPONSIVE
