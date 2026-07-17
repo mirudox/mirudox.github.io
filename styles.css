@@ -244,17 +244,18 @@ img { max-width: 100%; display: block; }
 /* The active, glowing signal pulse */
 .scope-path {
   fill: none;
-  stroke: var(--cyan);
+  stroke: url(#pulseGradient); /* Uses the SVG gradient instead of flat cyan */
   stroke-width: 2.5;
   stroke-linejoin: round;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 10px rgba(94,234,212,0.7));
+  filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.4)); /* Softened the glow slightly */
   
-  /* This creates a 150px pulse that travels along the 1000px path */
+  /* Creates a 150px pulse that travels along the 1000px path */
   stroke-dasharray: 150 850; 
   stroke-dashoffset: 1000;
   animation: signalFlow 4s linear infinite;
 }
+
 
 @keyframes signalFlow {
   0% { stroke-dashoffset: 1000; }
