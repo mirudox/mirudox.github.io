@@ -288,7 +288,7 @@ img { max-width: 100%; display: block; }
   justify-content: center;
 }
 
-/* The Glowing Aura */
+/* The Glowing Aura (Multi-color Contrast) */
 .profile-glow {
   position: absolute;
   top: 50%;
@@ -297,11 +297,26 @@ img { max-width: 100%; display: block; }
   width: 120%;
   height: 110%;
   border-radius: 40px;
-  background: radial-gradient(ellipse, rgba(94, 234, 212, 0.20) 0%, transparent 65%);
-  filter: blur(24px);
-  animation: pulseGlow 4s ease-in-out infinite alternate;
+  
+  /* A beautiful, high-contrast gradient mixing deep red/coral and cyan */
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.45) 0%, rgba(94, 234, 212, 0.25) 100%);
+  filter: blur(28px);
+  animation: pulseColorGlow 4s ease-in-out infinite alternate;
   z-index: 1;
 }
+
+/* Keyframe Animations */
+@keyframes pulseColorGlow {
+  0% { 
+    transform: translate(-50%, -50%) scale(0.95); 
+    opacity: 0.6; 
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1.08); 
+    opacity: 1; 
+  }
+}
+
 
 /* Your Photo - Large Portrait */
 .profile-img {
