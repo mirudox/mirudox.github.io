@@ -130,7 +130,122 @@ img { max-width: 100%; display: block; }
 .nav-toggle { display: none; }
 
 /* ============================================================
-   HERO - SPLIT LAYOUT & ANIMATIONS
+   HERO (Foundational Dark Theme)
+   ============================================================ */
+.hero {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% -10%, rgba(94,234,212,0.10), transparent),
+    var(--ink);
+  color: #F5FBFA;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: var(--cyan);
+}
+
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5.4vw, 4.1rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  margin: 0 0 20px;
+  max-width: 16ch;
+}
+
+.hero p.lede {
+  font-size: 1.1rem;
+  color: rgba(245, 251, 250, 0.72);
+  max-width: 54ch;
+  margin: 0 0 32px;
+}
+
+/* Button Styles */
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.btn {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  padding: 13px 22px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+.btn-solid {
+  background: var(--cyan);
+  color: var(--ink);
+  font-weight: 600;
+}
+.btn-solid:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -10px var(--cyan-dim); }
+
+.btn-line {
+  border-color: rgba(245, 251, 250, 0.25);
+  color: #F5FBFA;
+}
+.btn-line:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* Oscilloscope Signature Styles */
+.scope {
+  margin-top: 56px;
+  border-top: 1px solid var(--line-dark);
+  padding-top: 18px;
+}
+
+.scope-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(94, 234, 212, 0.55);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.scope svg { width: 100%; height: 68px; display: block; }
+
+.scope-path {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(94,234,212,0.45));
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: draw 2.4s ease-out forwards 0.3s;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scope-path { stroke-dashoffset: 0; animation: none; }
+}
+
+/* ============================================================
+   HERO - SPLIT LAYOUT & ANIMATIONS (The New Magic)
    ============================================================ */
 .hero--split {
   padding: 88px 0 32px;
@@ -157,11 +272,11 @@ img { max-width: 100%; display: block; }
   position: relative;
 }
 
-/* The Profile Image Container */
+/* The Profile Image Container (Magazine Style) */
 .profile-cluster {
   position: relative;
-  width: 340px;
-  height: 340px;
+  width: 360px;
+  height: 460px; /* Much taller, cinematic feel */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,33 +288,33 @@ img { max-width: 100%; display: block; }
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(94, 234, 212, 0.25) 0%, transparent 70%);
-  filter: blur(20px);
+  width: 120%;
+  height: 110%;
+  border-radius: 40px;
+  background: radial-gradient(ellipse, rgba(94, 234, 212, 0.20) 0%, transparent 65%);
+  filter: blur(24px);
   animation: pulseGlow 4s ease-in-out infinite alternate;
   z-index: 1;
 }
 
-/* Your Photo */
+/* Your Photo - Large Portrait */
 .profile-img {
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px; /* Soft, modern rounded corners instead of a circle */
   object-fit: cover;
   position: relative;
   z-index: 2;
-  border: 2px solid rgba(94, 234, 212, 0.4);
-  box-shadow: 0 0 40px rgba(10, 20, 32, 0.8);
+  border: 1px solid rgba(94, 234, 212, 0.3);
+  box-shadow: 0 24px 48px -12px rgba(10, 20, 32, 0.9);
 }
 
 /* Glassmorphism Floating Badges */
 .float-badge {
   position: absolute;
   z-index: 3;
-  background: rgba(16, 30, 48, 0.65); /* Semi-transparent dark blue */
-  backdrop-filter: blur(12px); /* The frosted glass effect */
+  background: rgba(16, 30, 48, 0.75);
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(94, 234, 212, 0.25);
   color: var(--cyan);
@@ -211,28 +326,29 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
   animation: floatOrb 6s ease-in-out infinite;
 }
 
-/* Positioning and timing the badges so they orbit naturally */
-.badge-1 { top: 5%; left: -15%; animation-delay: 0s; }
-.badge-2 { top: 65%; right: -25%; animation-delay: 1.5s; }
-.badge-3 { bottom: 2%; left: -5%; animation-delay: 3s; }
-.badge-4 { top: 15%; right: -15%; animation-delay: 4.5s; }
+/* Adjusted Positioning for the taller portrait */
+.badge-1 { top: 8%; left: -18%; animation-delay: 0s; }
+.badge-2 { top: 68%; right: -22%; animation-delay: 1.5s; }
+.badge-3 { bottom: 6%; left: -12%; animation-delay: 3s; }
+.badge-4 { top: 22%; right: -18%; animation-delay: 4.5s; }
 
 /* Keyframe Animations */
 @keyframes pulseGlow {
-  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
-  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
 }
 
 @keyframes floatOrb {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-18px); }
+  50% { transform: translateY(-12px); }
 }
 
-/* Mobile Responsiveness: Stacks the text on top of the image */
+
+/* Mobile Responsiveness */
 @media (max-width: 960px) {
   .hero-layout {
     flex-direction: column;
@@ -249,12 +365,12 @@ img { max-width: 100%; display: block; }
   .hero-eyebrow { justify-content: center; }
   .hero-actions { justify-content: center; }
   
-  /* Pull in the badges slightly on mobile so they don't break the screen width */
   .badge-1 { left: -5%; }
   .badge-2 { right: -5%; }
   .badge-3 { left: 5%; }
   .badge-4 { right: 0%; }
 }
+
 
 
 /* ============================================================
