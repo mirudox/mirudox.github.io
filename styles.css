@@ -688,6 +688,85 @@ a.verify-link:hover { color: #0F766E; }
 }
 
 /* ============================================================
+   VISION & PURPOSE CARDS (Homepage)
+   Safely scoped to .goal-card to protect Certifications/Projects
+   ============================================================ */
+.goal-card {
+  background: #FFFFFF;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(17, 24, 39, 0.05);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(17, 24, 39, 0.05);
+}
+
+/* Card 3 (Vision) has a subtle highlight to make it pop */
+.goal-card--vision {
+  border: 2px solid rgba(94, 234, 212, 0.25);
+  box-shadow: 0 4px 16px rgba(94, 234, 212, 0.1);
+}
+
+/* Safely overriding the tag styles ONLY inside goal cards */
+.goal-card .card-tag {
+  padding: 6px 12px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+
+.goal-card .status-active   { background: rgba(94, 234, 212, 0.15); color: #0F766E; }
+.goal-card .status-upcoming { background: rgba(17, 24, 39, 0.05); color: #6B7280; }
+.goal-card .status-vision   { background: rgba(17, 24, 39, 0.1); color: #111827; font-weight: 600;}
+
+.goal-card h3 {
+  font-size: 1.25rem;
+  font-family: var(--display);
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.goal-card p {
+  font-size: 0.9rem;
+  color: #6B7280;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  flex-grow: 1; /* Pushes the list to the bottom for even card heights */
+}
+
+/* The lists inside the cards */
+.goal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.95rem;
+  color: #4B5563;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.goal-list li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.goal-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--mist);
+}
+
+/* Outcome list items (Vision card) have arrows instead of dots */
+.goal-list--outcomes li::before {
+  content: '→';
+  color: #0F766E;
+  font-weight: bold;
+}
+
+
+/* ============================================================
    FOOTER
    ============================================================ */
 .site-footer {
