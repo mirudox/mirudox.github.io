@@ -41,6 +41,12 @@ body {
   color: var(--slate);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  /* Add these 3 lines to enable the sticky footer: */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 }
 
 a { color: inherit; text-decoration: none; }
@@ -124,132 +130,132 @@ img { max-width: 100%; display: block; }
 .nav-toggle { display: none; }
 
 /* ============================================================
-   HERO (dark, every page)
+   HERO - SPLIT LAYOUT & ANIMATIONS
    ============================================================ */
-.hero {
-  background:
-    radial-gradient(ellipse 80% 60% at 20% -10%, rgba(94,234,212,0.10), transparent),
-    var(--ink);
-  color: #F5FBFA;
-  position: relative;
-  overflow: hidden;
-  padding: 88px 0 64px;
+.hero--split {
+  padding: 88px 0 32px;
 }
 
-.hero.hero--compact { padding: 64px 0 48px; }
+.hero-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 64px;
+  margin-bottom: 64px;
+}
 
-.hero-eyebrow {
+.hero-content {
+  flex: 1.2;
+  max-width: 640px;
+}
+
+.hero-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* The Profile Image Container */
+.profile-cluster {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The Glowing Aura */
+.profile-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.25) 0%, transparent 70%);
+  filter: blur(20px);
+  animation: pulseGlow 4s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+/* Your Photo */
+.profile-img {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  border: 2px solid rgba(94, 234, 212, 0.4);
+  box-shadow: 0 0 40px rgba(10, 20, 32, 0.8);
+}
+
+/* Glassmorphism Floating Badges */
+.float-badge {
+  position: absolute;
+  z-index: 3;
+  background: rgba(16, 30, 48, 0.65); /* Semi-transparent dark blue */
+  backdrop-filter: blur(12px); /* The frosted glass effect */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(94, 234, 212, 0.25);
+  color: var(--cyan);
+  padding: 10px 18px;
+  border-radius: 999px;
   font-family: var(--mono);
   font-size: 12.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin: 0 0 18px;
+  white-space: nowrap;
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.hero-eyebrow::before {
-  content: '';
-  width: 22px;
-  height: 1px;
-  background: var(--cyan);
-}
-
-.hero h1 {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: clamp(2.4rem, 5.4vw, 4.1rem);
-  line-height: 1.04;
-  letter-spacing: -0.01em;
-  margin: 0 0 20px;
-  max-width: 16ch;
-}
-
-.hero p.lede {
-  font-size: 1.1rem;
-  color: rgba(245, 251, 250, 0.72);
-  max-width: 54ch;
-  margin: 0 0 32px;
-}
-
-.hero-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 22px;
-  font-family: var(--mono);
-  font-size: 13px;
-  color: rgba(245, 251, 250, 0.55);
-  margin-bottom: 40px;
-}
-
-.hero-meta span { display: flex; align-items: center; gap: 7px; }
-
-.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
-
-.btn {
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  padding: 13px 22px;
-  border-radius: 8px;
-  display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  border: 1px solid transparent;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: floatOrb 6s ease-in-out infinite;
 }
 
-.btn-solid {
-  background: var(--cyan);
-  color: var(--ink);
-  font-weight: 600;
-}
-.btn-solid:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -10px var(--cyan-dim); }
+/* Positioning and timing the badges so they orbit naturally */
+.badge-1 { top: 5%; left: -15%; animation-delay: 0s; }
+.badge-2 { top: 65%; right: -25%; animation-delay: 1.5s; }
+.badge-3 { bottom: 2%; left: -5%; animation-delay: 3s; }
+.badge-4 { top: 15%; right: -15%; animation-delay: 4.5s; }
 
-.btn-line {
-  border-color: rgba(245, 251, 250, 0.25);
-  color: #F5FBFA;
-}
-.btn-line:hover { border-color: var(--cyan); color: var(--cyan); }
-
-/* Oscilloscope signature */
-.scope {
-  margin-top: 56px;
-  border-top: 1px solid var(--line-dark);
-  padding-top: 18px;
+/* Keyframe Animations */
+@keyframes pulseGlow {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
 }
 
-.scope-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: rgba(94, 234, 212, 0.55);
-  text-transform: uppercase;
-  margin-bottom: 10px;
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-18px); }
 }
 
-.scope svg { width: 100%; height: 68px; display: block; }
-
-.scope-path {
-  fill: none;
-  stroke: var(--cyan);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(94,234,212,0.45));
-  stroke-dasharray: 900;
-  stroke-dashoffset: 900;
-  animation: draw 2.4s ease-out forwards 0.3s;
+/* Mobile Responsiveness: Stacks the text on top of the image */
+@media (max-width: 960px) {
+  .hero-layout {
+    flex-direction: column;
+    text-align: center;
+    gap: 80px;
+  }
+  
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-eyebrow { justify-content: center; }
+  .hero-actions { justify-content: center; }
+  
+  /* Pull in the badges slightly on mobile so they don't break the screen width */
+  .badge-1 { left: -5%; }
+  .badge-2 { right: -5%; }
+  .badge-3 { left: 5%; }
+  .badge-4 { right: 0%; }
 }
 
-@keyframes draw {
-  to { stroke-dashoffset: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scope-path { stroke-dashoffset: 0; animation: none; }
-}
 
 /* ============================================================
    SECTIONS (light)
@@ -534,21 +540,75 @@ a.verify-link:hover { color: #0F766E; }
   background: var(--ink);
   color: rgba(245, 251, 250, 0.6);
   padding: 44px 0;
+  margin-top: auto; 
 }
-.site-footer .wrap {
+
+/* New Split Layout Container */
+.footer-layout {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Pushes left and right sides apart */
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 32px;
 }
-.site-footer .foot-mark {
+
+.footer-left .foot-mark {
   font-family: var(--mono);
   font-size: 12.5px;
-  color: rgba(245, 251, 250, 0.8);
+  color: rgba(245, 251, 250, 0.5);
 }
-.foot-links { display: flex; gap: 18px; font-family: var(--mono); font-size: 12.5px; }
-.foot-links a:hover { color: var(--cyan); }
+
+.footer-right {
+  display: flex;
+  flex-direction: column; /* Forces the text to stack directly above the icons */
+  align-items: flex-start; /* Keeps the text and icons neatly aligned on the left edge of their box */
+  gap: 16px; /* Adds that vertical padding between the text and the icons */
+}
+
+.connect-label {
+  font-family: var(--mono);
+  font-size: 14px; /* Increased the font size (was 12px) */
+  color: rgba(245, 251, 250, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+
+/* Spaced out icons */
+.social-icons {
+  display: flex;
+  gap: 26px; /* Increased gap to fix the cramped look */
+  align-items: center;
+}
+
+/* Force override the blue default links */
+.social-icons a {
+  color: rgba(245, 251, 250, 0.7) !important; 
+  font-size: 20px; /* Slightly larger icons */
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+}
+
+.social-icons a:hover,
+.social-icons a:focus-visible {
+  color: var(--cyan) !important; /* Turns cyan on hover */
+  transform: translateY(-3px);
+  outline: none;
+}
+
+/* Mobile Responsiveness: Stacks nicely on phones */
+@media (max-width: 768px) {
+  .footer-layout {
+    flex-direction: column-reverse; /* Puts copyright on bottom, icons on top */
+    align-items: center;
+    text-align: center;
+  }
+  .footer-right {
+    justify-content: center;
+  }
+}
+
 
 /* ============================================================
    RESPONSIVE
