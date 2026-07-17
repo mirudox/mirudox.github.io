@@ -139,6 +139,12 @@ img { max-width: 100%; display: block; }
   color: #F5FBFA;
   position: relative;
   overflow: hidden;
+  padding: 88px 0 64px; /* Restores the tall top and bottom spacing */
+}
+
+/* Restores the specific spacing for your subpages */
+.hero.hero--compact { 
+  padding: 64px 0 48px; 
 }
 
 .hero-eyebrow {
