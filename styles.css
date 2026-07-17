@@ -791,11 +791,11 @@ a.verify-link:hover { color: #0F766E; }
 .journey-item:last-child::before { display: none; }
 
 .journey-item.past::before {
-  border-left-color: var(--accent);
+  border-left-color: #0F766E;
   border-left-style: solid;
 }
 .journey-item.current::before {
-  border-left-color: var(--cyan);
+  border-left-color: var(--mist);
   border-left-style: dashed;
 }
 
@@ -811,8 +811,8 @@ a.verify-link:hover { color: #0F766E; }
 }
 
 .journey-item.past .journey-marker {
-  background: var(--accent);
-  box-shadow: 0 0 0 3px rgba(18, 60, 105, 0.15);
+  background: #0F766E;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
 }
 
 .journey-item.current .journey-marker {
