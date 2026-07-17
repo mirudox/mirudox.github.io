@@ -213,7 +213,9 @@ img { max-width: 100%; display: block; }
 }
 .btn-line:hover { border-color: var(--cyan); color: var(--cyan); }
 
-/* Oscilloscope Signature Styles */
+/* ============================================================
+   OSCILLOSCOPE SIGNATURE - MORPHING SIGNAL
+   ============================================================ */
 .scope {
   margin-top: 56px;
   border-top: 1px solid var(--line-dark);
@@ -231,24 +233,38 @@ img { max-width: 100%; display: block; }
 
 .scope svg { width: 100%; height: 68px; display: block; }
 
+/* The faint background track */
+.scope-path-bg {
+  fill: none;
+  stroke: rgba(94, 234, 212, 0.12);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+/* The active, glowing signal pulse */
 .scope-path {
   fill: none;
   stroke: var(--cyan);
-  stroke-width: 1.6;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(94,234,212,0.45));
-  stroke-dasharray: 900;
-  stroke-dashoffset: 900;
-  animation: draw 2.4s ease-out forwards 0.3s;
+  filter: drop-shadow(0 0 10px rgba(94,234,212,0.7));
+  
+  /* This creates a 150px pulse that travels along the 1000px path */
+  stroke-dasharray: 150 850; 
+  stroke-dashoffset: 1000;
+  animation: signalFlow 4s linear infinite;
 }
 
-@keyframes draw {
-  to { stroke-dashoffset: 0; }
+@keyframes signalFlow {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scope-path { stroke-dashoffset: 0; animation: none; }
+  .scope-path { stroke-dasharray: none; animation: none; }
 }
+
 
 /* ============================================================
    HERO - SPLIT LAYOUT & ANIMATIONS (The New Magic)
