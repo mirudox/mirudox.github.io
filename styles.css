@@ -737,14 +737,43 @@ a.verify-link:hover { color: #0F766E; }
    ============================================================ */
 @media (max-width: 860px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .nav-links { display: none; }
+  
+  /* Mobile Navigation Fix */
+  .nav .wrap {
+    flex-direction: column; /* Stacks the logo on top, links below */
+    height: auto;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+  
+  .nav-links {
+    display: flex; /* Overrides the old display:none */
+    flex-wrap: wrap; /* Allows links to naturally drop to a second line if the screen is very narrow */
+    justify-content: center;
+    width: 100%;
+    gap: 6px;
+  }
+  
+  .nav-links a {
+    font-size: 12px;
+    padding: 8px 12px;
+    background: rgba(94, 234, 212, 0.05); /* Gives the links a subtle button shape on mobile */
+  }
 }
+
 @media (max-width: 560px) {
   .grid-3, .grid-2 { grid-template-columns: 1fr; }
   .wrap { padding: 0 20px; }
   .hero { padding: 64px 0 44px; }
   .section { padding: 56px 0; }
+  
+  /* Pull in the floating badges slightly on very small phones */
+  .badge-1 { left: -2%; }
+  .badge-2 { right: -2%; }
+  .badge-3 { left: 2%; }
+  .badge-4 { right: 2%; }
 }
+
 
 /* ============================================================
    VALIDITY — CORNER RIBBON + LEGEND
