@@ -888,7 +888,7 @@ a.verify-link:hover { color: #0F766E; }
    VISION — final node of the journey, not a separate card
    ============================================================ */
 .journey-item--vision {
-  padding-top: 8px;
+  padding-top: 4px;
   margin-top: 8px;
 }
 
@@ -896,34 +896,29 @@ a.verify-link:hover { color: #0F766E; }
 .journey-item--vision::before { display: none; }
 
 .journey-marker--vision {
-  width: 26px;
-  height: 26px;
-  left: -7px;
-  top: -2px;
-  background: var(--ink);
+  width: 28px;
+  height: 28px;
+  left: -8px;
+  top: 2px;
+  background: var(--accent);
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--cyan);
-  font-size: 12px;
-  box-shadow: 0 0 0 5px rgba(94, 234, 212, 0.18), 0 6px 16px -4px rgba(10, 20, 32, 0.4);
-  animation: vision-pulse 2.8s ease-in-out infinite;
+  color: #EAF6F4;
+  font-size: 13px;
+  box-shadow: 0 0 0 5px rgba(18, 60, 105, 0.14), 0 6px 16px -4px rgba(10, 20, 32, 0.35);
 }
 
-@keyframes vision-pulse {
-  0%, 100% { box-shadow: 0 0 0 5px rgba(94, 234, 212, 0.18), 0 6px 16px -4px rgba(10, 20, 32, 0.4); }
-  50%      { box-shadow: 0 0 0 9px rgba(94, 234, 212, 0.28), 0 6px 20px -4px rgba(10, 20, 32, 0.5); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .journey-marker--vision { animation: none; }
+.journey-item--vision .journey-content {
+  padding-top: 2px;
 }
 
 .journey-item--vision .journey-content h3 {
   font-size: 1.35rem;
   color: var(--slate);
-  margin-bottom: 14px;
+  margin: 0 0 14px;
+  line-height: 1.2;
 }
 
 .journey-item--vision .journey-content p {
@@ -934,6 +929,7 @@ a.verify-link:hover { color: #0F766E; }
   margin: 0 0 16px;
 }
 .journey-item--vision .journey-content p:last-child { margin-bottom: 0; }
+
 
 
 /* ============================================================
