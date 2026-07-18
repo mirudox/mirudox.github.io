@@ -124,7 +124,21 @@ img { max-width: 100%; display: block; }
   background: rgba(94, 234, 212, 0.08);
 }
 
-.nav-toggle { display: none; }
+.nav-toggle { 
+  display: none; 
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  padding: 4px; 
+}
+.nav-toggle svg {
+  transition: transform 0.3s ease;
+}
+/* When the menu is open, flip the arrow upside down */
+.nav-toggle.is-active svg {
+  transform: rotate(180deg);
+}
+
 
 /* ============================================================
    HERO (Foundational Dark Theme)
@@ -944,25 +958,46 @@ a.verify-link:hover { color: #0F766E; }
 @media (max-width: 860px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   
+  /* Mobile Navigation Fix - Dynamic Toggle */
   .nav .wrap {
-    flex-direction: column;
+    flex-direction: row; /* Keeps logo and arrow on the same line */
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allows the menu to drop down below them */
     height: auto;
     padding: 16px 20px;
-    gap: 12px;
+  }
+  
+  .nav-toggle {
+    display: block; /* Shows the arrow on mobile */
   }
   
   .nav-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: none; /* Hides the menu by default on mobile */
+    flex-direction: column;
     width: 100%;
-    gap: 6px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-dark);
+    gap: 8px;
+  }
+
+  /* This class is added by JavaScript when the arrow is clicked */
+  .nav-links.is-open {
+    display: flex;
+    animation: dropDown 0.3s ease forwards;
   }
   
   .nav-links a {
-    font-size: 12px;
-    padding: 8px 12px;
-    background: rgba(94, 234, 212, 0.05);
+    font-size: 14px;
+    padding: 12px;
+    text-align: center;
+    background: transparent;
+    display: block; /* Makes the whole row tappable */
+  }
+
+  @keyframes dropDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
