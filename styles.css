@@ -41,12 +41,9 @@ body {
   color: var(--slate);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  /* Add these 3 lines to enable the sticky footer: */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
 }
 
 a { color: inherit; text-decoration: none; }
@@ -139,10 +136,9 @@ img { max-width: 100%; display: block; }
   color: #F5FBFA;
   position: relative;
   overflow: hidden;
-  padding: 88px 0 64px; /* Restores the tall top and bottom spacing */
+  padding: 88px 0 64px;
 }
 
-/* Restores the specific spacing for your subpages */
 .hero.hero--compact { 
   padding: 64px 0 48px; 
 }
@@ -183,7 +179,6 @@ img { max-width: 100%; display: block; }
   margin: 0 0 32px;
 }
 
-/* Button Styles */
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
 .btn {
@@ -233,7 +228,6 @@ img { max-width: 100%; display: block; }
 
 .scope svg { width: 100%; height: 68px; display: block; }
 
-/* The faint background track */
 .scope-path-bg {
   fill: none;
   stroke: rgba(94, 234, 212, 0.12);
@@ -241,21 +235,17 @@ img { max-width: 100%; display: block; }
   stroke-linejoin: round;
 }
 
-/* The active, glowing signal pulse */
 .scope-path {
   fill: none;
-  stroke: url(#pulseGradient); /* Uses the SVG gradient instead of flat cyan */
+  stroke: url(#pulseGradient);
   stroke-width: 2.5;
   stroke-linejoin: round;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.4)); /* Softened the glow slightly */
-  
-  /* Creates a 150px pulse that travels along the 1000px path */
+  filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.4));
   stroke-dasharray: 150 850; 
   stroke-dashoffset: 1000;
   animation: signalFlow 4s linear infinite;
 }
-
 
 @keyframes signalFlow {
   0% { stroke-dashoffset: 1000; }
@@ -266,9 +256,8 @@ img { max-width: 100%; display: block; }
   .scope-path { stroke-dasharray: none; animation: none; }
 }
 
-
 /* ============================================================
-   HERO - SPLIT LAYOUT & ANIMATIONS (The New Magic)
+   HERO - SPLIT LAYOUT & ANIMATIONS
    ============================================================ */
 .hero--split {
   padding: 88px 0 32px;
@@ -295,17 +284,15 @@ img { max-width: 100%; display: block; }
   position: relative;
 }
 
-/* The Profile Image Container (Magazine Style) */
 .profile-cluster {
   position: relative;
   width: 360px;
-  height: 460px; /* Much taller, cinematic feel */
+  height: 460px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* The Glowing Aura (Multi-color Contrast) */
 .profile-glow {
   position: absolute;
   top: 50%;
@@ -314,15 +301,12 @@ img { max-width: 100%; display: block; }
   width: 120%;
   height: 110%;
   border-radius: 40px;
-  
-  /* A beautiful, high-contrast gradient mixing deep red/coral and cyan */
   background: linear-gradient(135deg, rgba(225, 29, 72, 0.45) 0%, rgba(94, 234, 212, 0.25) 100%);
   filter: blur(28px);
   animation: pulseColorGlow 4s ease-in-out infinite alternate;
   z-index: 1;
 }
 
-/* Keyframe Animations */
 @keyframes pulseColorGlow {
   0% { 
     transform: translate(-50%, -50%) scale(0.95); 
@@ -334,12 +318,10 @@ img { max-width: 100%; display: block; }
   }
 }
 
-
-/* Your Photo - Large Portrait */
 .profile-img {
   width: 100%;
   height: 100%;
-  border-radius: 24px; /* Soft, modern rounded corners instead of a circle */
+  border-radius: 24px;
   object-fit: cover;
   position: relative;
   z-index: 2;
@@ -347,7 +329,6 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 24px 48px -12px rgba(10, 20, 32, 0.9);
 }
 
-/* Glassmorphism Floating Badges */
 .float-badge {
   position: absolute;
   z-index: 3;
@@ -368,13 +349,11 @@ img { max-width: 100%; display: block; }
   animation: floatOrb 6s ease-in-out infinite;
 }
 
-/* Adjusted Positioning for the taller portrait */
 .badge-1 { top: 8%; left: -18%; animation-delay: 0s; }
 .badge-2 { top: 68%; right: -22%; animation-delay: 1.5s; }
 .badge-3 { bottom: 6%; left: -12%; animation-delay: 3s; }
 .badge-4 { top: 22%; right: -18%; animation-delay: 4.5s; }
 
-/* Keyframe Animations */
 @keyframes pulseGlow {
   0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
   100% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
@@ -385,8 +364,6 @@ img { max-width: 100%; display: block; }
   50% { transform: translateY(-12px); }
 }
 
-
-/* Mobile Responsiveness */
 @media (max-width: 960px) {
   .hero-layout {
     flex-direction: column;
@@ -408,8 +385,6 @@ img { max-width: 100%; display: block; }
   .badge-3 { left: 5%; }
   .badge-4 { right: 0%; }
 }
-
-
 
 /* ============================================================
    SECTIONS (light)
@@ -448,7 +423,6 @@ img { max-width: 100%; display: block; }
   margin: 10px 0 0;
 }
 
-/* reveal on scroll */
 .reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -550,9 +524,6 @@ img { max-width: 100%; display: block; }
 }
 a.verify-link:hover { color: #0F766E; }
 
-/* AVIXA "in progress" glow — draws the eye without shouting.
-   Uses box-shadow (not a pseudo-element) since box-shadow is never
-   clipped by the element's own overflow:hidden, unlike ::before content. */
 .cert-card.glow-card {
   animation: glow-pulse 2.6s ease-in-out infinite;
 }
@@ -564,7 +535,6 @@ a.verify-link:hover { color: #0F766E; }
   .cert-card.glow-card { animation: none; box-shadow: 0 0 40px 10px rgba(94, 234, 212, 0.55); }
 }
 
-/* Plain (non-flip) card — used on Projects page */
 .card {
   position: relative;
   background: #fff;
@@ -621,7 +591,6 @@ a.verify-link:hover { color: #0F766E; }
   margin-top: auto;
 }
 
-/* skills / competency chips */
 .chip-group { margin-bottom: 28px; }
 .chip-group h4 {
   font-family: var(--mono);
@@ -641,7 +610,8 @@ a.verify-link:hover { color: #0F766E; }
   color: var(--slate);
 }
 
-/* timeline (education) */
+/* Legacy — currently unused since "Who I Am" moved to prose.
+   Safe to delete if nothing references .timeline/.tl-item anymore. */
 .timeline { border-left: 2px solid var(--line); padding-left: 28px; margin-left: 4px; }
 .tl-item { position: relative; padding-bottom: 30px; }
 .tl-item:last-child { padding-bottom: 0; }
@@ -659,7 +629,6 @@ a.verify-link:hover { color: #0F766E; }
 .tl-item h4 { font-family: var(--display); margin: 0 0 4px; font-size: 1.05rem; }
 .tl-item span { font-family: var(--mono); font-size: 12px; color: var(--mist); }
 
-/* blog list */
 .post-row {
   display: flex;
   gap: 24px;
@@ -689,7 +658,6 @@ a.verify-link:hover { color: #0F766E; }
 
 /* ============================================================
    VISION & PURPOSE CARDS (Homepage)
-   Safely scoped to .goal-card to protect Certifications/Projects
    ============================================================ */
 .goal-card {
   background: #FFFFFF;
@@ -701,13 +669,11 @@ a.verify-link:hover { color: #0F766E; }
   border: 1px solid rgba(17, 24, 39, 0.05);
 }
 
-/* Card 3 (Vision) has a subtle highlight to make it pop */
 .goal-card--vision {
   border: 2px solid rgba(94, 234, 212, 0.25);
   box-shadow: 0 4px 16px rgba(94, 234, 212, 0.1);
 }
 
-/* Safely overriding the tag styles ONLY inside goal cards */
 .goal-card .card-tag {
   padding: 6px 12px;
   border-radius: 100px;
@@ -731,10 +697,9 @@ a.verify-link:hover { color: #0F766E; }
   color: #6B7280;
   line-height: 1.6;
   margin-bottom: 24px;
-  flex-grow: 1; /* Pushes the list to the bottom for even card heights */
+  flex-grow: 1;
 }
 
-/* The lists inside the cards */
 .goal-list {
   list-style: none;
   padding: 0;
@@ -758,13 +723,11 @@ a.verify-link:hover { color: #0F766E; }
   color: var(--mist);
 }
 
-/* Outcome list items (Vision card) have arrows instead of dots */
 .goal-list--outcomes li::before {
   content: '→';
   color: #0F766E;
   font-weight: bold;
 }
-
 
 /* ============================================================
    FOOTER
@@ -776,10 +739,9 @@ a.verify-link:hover { color: #0F766E; }
   margin-top: auto; 
 }
 
-/* New Split Layout Container */
 .footer-layout {
   display: flex;
-  justify-content: space-between; /* Pushes left and right sides apart */
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 32px;
@@ -793,31 +755,28 @@ a.verify-link:hover { color: #0F766E; }
 
 .footer-right {
   display: flex;
-  flex-direction: column; /* Forces the text to stack directly above the icons */
-  align-items: flex-start; /* Keeps the text and icons neatly aligned on the left edge of their box */
-  gap: 16px; /* Adds that vertical padding between the text and the icons */
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .connect-label {
   font-family: var(--mono);
-  font-size: 14px; /* Increased the font size (was 12px) */
+  font-size: 14px;
   color: rgba(245, 251, 250, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-
-/* Spaced out icons */
 .social-icons {
   display: flex;
-  gap: 26px; /* Increased gap to fix the cramped look */
+  gap: 26px;
   align-items: center;
 }
 
-/* Force override the blue default links */
 .social-icons a {
   color: rgba(245, 251, 250, 0.7) !important; 
-  font-size: 20px; /* Slightly larger icons */
+  font-size: 20px;
   text-decoration: none;
   transition: color 0.2s ease, transform 0.2s ease;
   display: flex;
@@ -825,15 +784,14 @@ a.verify-link:hover { color: #0F766E; }
 
 .social-icons a:hover,
 .social-icons a:focus-visible {
-  color: var(--cyan) !important; /* Turns cyan on hover */
+  color: var(--cyan) !important;
   transform: translateY(-3px);
   outline: none;
 }
 
-/* Mobile Responsiveness: Stacks nicely on phones */
 @media (max-width: 768px) {
   .footer-layout {
-    flex-direction: column-reverse; /* Puts copyright on bottom, icons on top */
+    flex-direction: column-reverse;
     align-items: center;
     text-align: center;
   }
@@ -843,8 +801,7 @@ a.verify-link:hover { color: #0F766E; }
 }
 
 /* ============================================================
-   LEARNING PATH — JOURNEY (renamed to avoid collision with
-   the unrelated .timeline used in the homepage Education section)
+   LEARNING PATH — JOURNEY
    ============================================================ */
 .journey {
   position: relative;
@@ -858,7 +815,6 @@ a.verify-link:hover { color: #0F766E; }
 }
 .journey-item:last-child { padding-bottom: 0; }
 
-/* Connector line per item, colored by state */
 .journey-item::before {
   content: '';
   position: absolute;
@@ -878,7 +834,6 @@ a.verify-link:hover { color: #0F766E; }
   border-left-style: dashed;
 }
 
-/* Markers */
 .journey-marker {
   position: absolute;
   left: 0;
@@ -914,7 +869,6 @@ a.verify-link:hover { color: #0F766E; }
   .journey-item.current .journey-marker { animation: none; box-shadow: 0 0 0 5px rgba(94, 234, 212, 0.3); }
 }
 
-/* Text */
 .journey-content h3 {
   font-family: var(--display);
   font-size: 1.05rem;
@@ -972,17 +926,16 @@ a.verify-link:hover { color: #0F766E; }
 @media (max-width: 860px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   
-  /* Mobile Navigation Fix */
   .nav .wrap {
-    flex-direction: column; /* Stacks the logo on top, links below */
+    flex-direction: column;
     height: auto;
     padding: 16px 20px;
     gap: 12px;
   }
   
   .nav-links {
-    display: flex; /* Overrides the old display:none */
-    flex-wrap: wrap; /* Allows links to naturally drop to a second line if the screen is very narrow */
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     width: 100%;
     gap: 6px;
@@ -991,7 +944,7 @@ a.verify-link:hover { color: #0F766E; }
   .nav-links a {
     font-size: 12px;
     padding: 8px 12px;
-    background: rgba(94, 234, 212, 0.05); /* Gives the links a subtle button shape on mobile */
+    background: rgba(94, 234, 212, 0.05);
   }
 }
 
@@ -1001,13 +954,11 @@ a.verify-link:hover { color: #0F766E; }
   .hero { padding: 64px 0 44px; }
   .section { padding: 56px 0; }
   
-  /* Pull in the floating badges slightly on very small phones */
   .badge-1 { left: -2%; }
   .badge-2 { right: -2%; }
   .badge-3 { left: 2%; }
   .badge-4 { right: 2%; }
 }
-
 
 /* ============================================================
    VALIDITY — CORNER RIBBON + LEGEND
