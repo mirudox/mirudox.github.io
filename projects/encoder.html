@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside the Encoder: I-Frames, P-Frames & B-Frames</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#070a12;color:#e2e8f0;min-height:100vh;padding:16px;line-height:1.55}
+.container{max-width:1200px;margin:0 auto}
+h1{font-size:1.4rem;margin-bottom:3px;color:#f8fafc}
+.subtitle{color:#64748b;font-size:0.8rem;margin-bottom:16px}
+
+/* ── LAYOUT ─────────────────────────────────────── */
+.main-stage{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.left-col{flex:1;min-width:340px;display:flex;flex-direction:column;gap:12px}
+.sidebar{width:100%;max-width:360px;display:flex;flex-direction:column;gap:12px}
+
+/* ── SVG ────────────────────────────────────────── */
+.frame-canvas{width:100%;max-width:520px;height:auto;border:2px solid #1e293b;background:#0b1120;border-radius:10px;display:block}
+.macroblock{stroke:#1e3a5f;stroke-width:1;fill:none;transition:fill .2s,stroke .2s;cursor:pointer}
+.macroblock:hover{stroke:#60a5fa;stroke-width:2}
+.mb-intra{fill:rgba(239,68,68,.22);stroke:#ef4444;stroke-width:2}
+.mb-skip{fill:rgba(34,197,94,.18);stroke:#22c55e;stroke-width:2}
+.mb-inter{fill:rgba(59,130,246,.22);stroke:#3b82f6;stroke-width:2}
+.motion-vector{stroke:#f59e0b;stroke-width:2.5;marker-end:url(#arrowhead);opacity:.9}
+.search-circle{fill:none;stroke:#f59e0b;stroke-width:1.5;stroke-dasharray:4,3;opacity:.6}
+.search-candidate{fill:rgba(245,158,11,.15);stroke:#f59e0b;stroke-width:1;stroke-dasharray:3,3}
+
+/* ── FRAME BAR ──────────────────────────────────── */
+.frame-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.frame-num{font-size:.85rem;font-weight:600;color:#cbd5e1}
+.frame-num span{color:#fff;font-weight:700}
+.badge{padding:4px 12px;border-radius:6px;font-size:.7rem;font-weight:700;letter-spacing:.02em}
+.badge-i{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.badge-p{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.badge-b{background:rgba(147,51,234,.12);color:#c084fc;border:1px solid rgba(147,51,234,.25)}
+.badge-none{background:rgba(100,116,139,.1);color:#64748b;border:1px solid rgba(100,116,139,.2)}
+
+/* ── TIMELINE ────────────────────────────────────── */
+.timeline{display:flex;gap:6px;margin-top:10px;justify-content:center}
+.thumb{width:40px;height:28px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;cursor:pointer;background:#151e2e;border:2px solid #334155;color:#64748b;transition:all .15s}
+.thumb:hover{transform:translateY(-2px);border-color:#475569}
+.thumb.active-red{border-color:#ef4444;color:#f87171;background:rgba(239,68,68,.08)}
+.thumb.active-blue{border-color:#3b82f6;color:#60a5fa;background:rgba(59,130,246,.08)}
+.thumb.active-purple{border-color:#a855f7;color:#c084fc;background:rgba(147,51,234,.08)}
+
+/* ── CARDS ───────────────────────────────────────── */
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:14px}
+.card h3{font-size:.8rem;color:#f1f5f9;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.card p{font-size:.77rem;color:#94a3b8;line-height:1.5;margin-bottom:8px}
+
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+.btn{padding:7px 12px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;cursor:pointer;transition:all .15s;color:#fff}
+.btn:hover{transform:translateY(-1px);opacity:.9}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important}
+.btn-red{background:#dc2626}
+.btn-blue{background:#2563eb}
+.btn-purple{background:#7c3aed}
+.btn-slate{background:#475569}
+.btn-amber{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid rgba(245,158,11,.35)}
+
+/* ── STEP TRACK ──────────────────────────────────── */
+.step-track{display:flex;gap:4px;margin-bottom:10px}
+.step-dot{flex:1;height:4px;border-radius:2px;background:#1e293b;transition:background .3s}
+.step-dot.active{background:#3b82f6}
+.step-dot.done{background:#22c55e}
+
+/* ── LOG ─────────────────────────────────────────── */
+.log-box{background:#070a12;border-radius:8px;padding:10px;height:140px;overflow-y:auto;font-family:ui-monospace,SFMono-Regular,monospace;font-size:.69rem;color:#94a3b8;line-height:1.55;border:1px solid #1e293b}
+.log-entry{border-left:3px solid transparent;padding-left:8px;margin:2px 0}
+.log-i{border-left-color:#ef4444}
+.log-p{border-left-color:#3b82f6}
+.log-b{border-left-color:#a855f7}
+.log-skip{border-left-color:#22c55e}
+.log-warn{border-left-color:#f59e0b}
+.log-search{border-left-color:#f59e0b}
+
+/* ── PIXEL INSPECTOR ────────────────────────────── */
+.pixel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:4px}
+.pixel-cell{aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;font-family:monospace}
+.pixel-label{font-size:.64rem;color:#64748b;margin-top:6px;text-align:center}
+
+/* ── MODE GRID ───────────────────────────────────── */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.mode-btn{padding:8px;border-radius:6px;text-align:center;cursor:pointer;font-size:.72rem;font-weight:700;transition:all .15s;border:1px solid transparent}
+.mode-btn:hover{transform:translateY(-1px)}
+.mode-btn .bits{font-size:.62rem;opacity:.7;margin-top:2px;font-weight:500}
+.mode-skip{background:rgba(34,197,94,.1);color:#4ade80;border-color:rgba(34,197,94,.25)}
+.mode-inter{background:rgba(59,130,246,.1);color:#60a5fa;border-color:rgba(59,130,246,.25)}
+.mode-intra{background:rgba(239,68,68,.1);color:#f87171;border-color:rgba(239,68,68,.25)}
+.mode-auto{background:rgba(147,51,234,.1);color:#c084fc;border-color:rgba(147,51,234,.25)}
+.mb-info{padding:8px;background:#070a12;border-radius:6px;font-size:.72rem;color:#cbd5e1;min-height:36px;border:1px solid #1e293b}
+
+/* ── MOTION ESTIMATION PANEL ────────────────────── */
+.me-block-row{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.me-block{text-align:center;flex:1}
+.me-block-label{font-size:.62rem;color:#64748b;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.me-pixel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.me-pixel{aspect-ratio:1;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;font-family:monospace}
+.me-diff-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.me-diff-cell{aspect-ratio:1;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;font-family:monospace}
+.me-score-bar{height:8px;border-radius:4px;background:#1e293b;overflow:hidden;margin:4px 0}
+.me-score-fill{height:100%;border-radius:4px;transition:width .4s,background .4s}
+.me-verdict{padding:8px;border-radius:6px;font-size:.72rem;font-weight:700;text-align:center;margin-top:6px}
+.me-verdict.skip{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
+.me-verdict.inter{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.25)}
+.me-verdict.intra{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+
+/* ── STATS ───────────────────────────────────────── */
+.stat-row{display:flex;justify-content:space-between;font-size:.77rem;padding:3px 0}
+.stat-label{color:#64748b}
+.stat-val{font-family:ui-monospace,SFMono-Regular,monospace;font-weight:600}
+.stat-divider{height:1px;background:#1e293b;margin:6px 0}
+.text-red{color:#f87171}.text-blue{color:#60a5fa}.text-green{color:#4ade80}.text-purple{color:#c084fc}
+
+/* ── LEGEND ──────────────────────────────────────── */
+.legend-item{display:flex;align-items:center;gap:8px;font-size:.74rem;color:#94a3b8;margin:3px 0}
+.dot{width:12px;height:12px;border-radius:2px;display:inline-block}
+.dot-intra{background:rgba(239,68,68,.35);border:1px solid #ef4444}
+.dot-inter{background:rgba(59,130,246,.35);border:1px solid #3b82f6}
+.dot-skip{background:rgba(34,197,94,.35);border:1px solid #22c55e}
+.dot-mv{background:#f59e0b;width:16px;height:3px;border-radius:1px}
+
+/* ── AHA BANNER ──────────────────────────────────── */
+.aha-banner{background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(147,51,234,.1));border:1px solid rgba(59,130,246,.25);border-radius:10px;padding:12px;display:none}
+.aha-banner.show{display:block;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.aha-banner h4{color:#60a5fa;font-size:.82rem;margin-bottom:4px}
+.aha-banner p{color:#94a3b8;font-size:.75rem;line-height:1.5}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+@media(max-width:768px){.main-stage{flex-direction:column}.sidebar{max-width:100%}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Inside the Encoder: I-Frames, P-Frames &amp; B-Frames</h1>
+<p class="subtitle">Become the encoder. See the numbers. Understand why each decision saves — or costs — bits.</p>
+
+<div class="aha-banner" id="aha-banner">
+  <h4>💡 Insight</h4>
+  <p id="aha-text"></p>
+</div>
+
+<div class="main-stage">
+
+  <!-- ══ LEFT COLUMN: canvas + log ══════════════════ -->
+  <div class="left-col">
+
+    <!-- frame bar -->
+    <div>
+      <div class="frame-bar">
+        <div class="frame-num">Frame <span id="frame-num">1</span> / 5</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div id="frame-type-badge" class="badge badge-i">I-FRAME (Intra-coded)</div>
+          <button onclick="resetSim()" class="btn btn-slate" style="font-size:.65rem;padding:4px 9px">↺ Restart</button>
+        </div>
+      </div>
+
+      <!-- SVG canvas -->
+      <svg id="stage" width="400" height="240" viewBox="0 0 400 240" class="frame-canvas">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0f1a2e" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="400" height="240" fill="#0b1120"/>
+        <rect width="400" height="240" fill="url(#grid)"/>
+        <rect x="0" y="0" width="400" height="140" fill="#1a3a5f" opacity="0.5"/>
+        <rect x="0" y="140" width="400" height="100" fill="#1e3a1e" opacity="0.4"/>
+        <rect x="0" y="160" width="400" height="60" fill="#2a2a2a" opacity="0.6"/>
+        <g id="clouds" fill="#64748b" opacity="0.4">
+          <ellipse cx="50" cy="35" rx="22" ry="10"/>
+          <ellipse cx="70" cy="30" rx="18" ry="9"/>
+          <ellipse cx="260" cy="45" rx="26" ry="12"/>
+          <ellipse cx="290" cy="40" rx="20" ry="10"/>
+          <ellipse cx="150" cy="25" rx="15" ry="7"/>
+        </g>
+        <g id="bicycle">
+          <circle cx="75" cy="175" r="16" fill="none" stroke="#d1d5db" stroke-width="2.5"/>
+          <circle cx="130" cy="175" r="16" fill="none" stroke="#d1d5db" stroke-width="2.5"/>
+          <line x1="75" y1="159" x2="75" y2="191" stroke="#6b7280" stroke-width="1"/>
+          <line x1="59" y1="175" x2="91" y2="175" stroke="#6b7280" stroke-width="1"/>
+          <line x1="130" y1="159" x2="130" y2="191" stroke="#6b7280" stroke-width="1"/>
+          <line x1="114" y1="175" x2="146" y2="175" stroke="#6b7280" stroke-width="1"/>
+          <polyline points="75,175 102,142 130,175 102,142 102,123 120,128 102,142" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linejoin="round"/>
+          <line x1="92" y1="123" x2="112" y2="123" stroke="#4b5563" stroke-width="3" stroke-linecap="round"/>
+          <line x1="117" y1="118" x2="127" y2="128" stroke="#4b5563" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="110" cy="108" r="7" fill="#fca5a5"/>
+          <line x1="110" y1="115" x2="110" y2="135" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+          <line x1="110" y1="122" x2="122" y2="128" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="110" y1="135" x2="103" y2="152" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <g id="mb-overlay"></g>
+        <g id="mv-overlay"></g>
+        <g id="search-overlay"></g>
+      </svg>
+
+      <!-- timeline -->
+      <div class="timeline">
+        <div class="thumb active-red" onclick="jumpToFrame(0)">I</div>
+        <div class="thumb" onclick="jumpToFrame(1)">?</div>
+        <div class="thumb" onclick="jumpToFrame(2)">?</div>
+        <div class="thumb" onclick="jumpToFrame(3)">?</div>
+        <div class="thumb" onclick="jumpToFrame(4)">?</div>
+      </div>
+    </div>
+
+    <!-- encoder log — directly below the canvas -->
+    <div class="card">
+      <h3>📝 Encoder Log — what the encoder is thinking</h3>
+      <div id="encoder-log" class="log-box">
+        <div class="log-entry">Simulation ready. Click ENCODE I-FRAME to begin.</div>
+      </div>
+    </div>
+
+    <!-- pixel inspector — shown after frame 1 -->
+    <div class="card" id="pixel-panel" style="display:none">
+      <h3>🔬 What the encoder actually sees — raw numbers, not a bicycle</h3>
+      <p style="font-size:.72rem;margin-bottom:6px">Hover any macroblock on the canvas. The encoder compares these Y-luma grids numerically — it has no concept of objects.</p>
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:4px">
+        <div style="text-align:center">
+          <div style="font-size:.62rem;color:#64748b;margin-bottom:3px">PREVIOUS FRAME</div>
+          <div class="pixel-grid" id="prev-pixel-grid"></div>
+        </div>
+        <div style="display:flex;align-items:center;font-size:1.1rem;color:#334155;padding-top:12px">→</div>
+        <div style="text-align:center">
+          <div style="font-size:.62rem;color:#64748b;margin-bottom:3px">CURRENT FRAME</div>
+          <div class="pixel-grid" id="curr-pixel-grid"></div>
+        </div>
+      </div>
+      <div class="pixel-label" id="pixel-diff-label">Hover a block to compare numbers</div>
+    </div>
+
+  </div><!-- end left-col -->
+
+  <!-- ══ SIDEBAR ═══════════════════════════════════ -->
+  <div class="sidebar">
+
+    <!-- encoder decision card -->
+    <div class="card">
+      <div class="step-track" id="step-track">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+      <h3>🎯 Encoder Decision</h3>
+      <p id="decision-prompt">Frame 1 must be an I-frame. There is no previous frame to reference. Every block will be intra-coded independently — like JPEG.</p>
+      <div class="btn-row" id="decision-buttons">
+        <button onclick="encodeIFrame()" class="btn btn-red">ENCODE I-FRAME</button>
+      </div>
+    </div>
+
+    <!-- macroblock inspector — shown after P/B frame -->
+    <div class="card" id="mb-panel" style="display:none">
+      <h3>🔍 Macroblock Inspector</h3>
+      <p style="font-size:.72rem;margin-bottom:6px">Select a mode, then click any block on the canvas to apply it. Watch the frame size change.</p>
+      <div class="mode-grid">
+        <div class="mode-btn mode-skip" onclick="setMbMode('skip')">
+          <div>SKIP</div>
+          <div class="bits">~1 bit — copy from prev</div>
+        </div>
+        <div class="mode-btn mode-inter" onclick="setMbMode('inter')">
+          <div>INTER</div>
+          <div class="bits">MV + residual (~15 bits)</div>
+        </div>
+        <div class="mode-btn mode-intra" onclick="setMbMode('intra')">
+          <div>INTRA</div>
+          <div class="bits">~2400 bits — full encode</div>
+        </div>
+        <div class="mode-btn mode-auto" onclick="autoDecide()">
+          <div>AUTO</div>
+          <div class="bits">Encoder decides</div>
+        </div>
+      </div>
+      <div class="mb-info" id="mb-info">Hover a macroblock to see what the encoder sees. Click to apply the selected mode.</div>
+    </div>
+
+    <!-- motion estimation panel — block by block manual control -->
+    <div class="card" id="search-panel" style="display:none">
+      <h3>🔎 Motion Estimation — block by block</h3>
+      <p style="font-size:.72rem;margin-bottom:4px">
+        Hover any block to see the encoder's comparison: previous frame block vs current frame block.
+        The <strong>difference score</strong> tells you what the encoder should do.
+      </p>
+
+      <!-- comparison grids -->
+      <div class="me-block-row">
+        <div class="me-block">
+          <div class="me-block-label">Prev frame block</div>
+          <div class="me-pixel-grid" id="me-prev-grid"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding-top:14px">
+          <div style="font-size:.65rem;color:#64748b">diff</div>
+          <div style="font-size:.9rem;color:#334155">−</div>
+        </div>
+        <div class="me-block">
+          <div class="me-block-label">Current frame block</div>
+          <div class="me-pixel-grid" id="me-curr-grid"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding-top:14px">
+          <div style="font-size:.65rem;color:#64748b">=</div>
+        </div>
+        <div class="me-block">
+          <div class="me-block-label">Residual (error)</div>
+          <div class="me-diff-grid" id="me-diff-grid"></div>
+        </div>
+      </div>
+
+      <!-- score bar -->
+      <div style="font-size:.68rem;color:#64748b;margin-top:6px">Total difference score: <span id="me-score-val" style="color:#e2e8f0;font-weight:700">—</span></div>
+      <div class="me-score-bar"><div class="me-score-fill" id="me-score-fill" style="width:0%"></div></div>
+
+      <!-- encoder verdict -->
+      <div class="me-verdict" id="me-verdict" style="display:none"></div>
+
+      <!-- explanation -->
+      <div style="font-size:.69rem;color:#64748b;margin-top:8px;line-height:1.6" id="me-explanation">
+        Hover any block on the canvas above to see this comparison live.
+      </div>
+    </div>
+
+    <!-- bitstream stats -->
+    <div class="card">
+      <h3>📊 Bitstream Stats</h3>
+      <div class="stat-row"><span class="stat-label">This frame:</span><span id="frame-size" class="stat-val text-white">0 bits</span></div>
+      <div class="stat-row"><span class="stat-label">Total stream:</span><span id="total-size" class="stat-val text-white">0 bits</span></div>
+      <div class="stat-row"><span class="stat-label">Compression:</span><span id="compression" class="stat-val text-green">0%</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-row"><span class="stat-label">I-Frames:</span><span id="i-count" class="stat-val text-red">0</span></div>
+      <div class="stat-row"><span class="stat-label">P-Frames:</span><span id="p-count" class="stat-val text-blue">0</span></div>
+      <div class="stat-row"><span class="stat-label">B-Frames:</span><span id="b-count" class="stat-val text-purple">0</span></div>
+      <div class="stat-row"><span class="stat-label">Skipped MBs:</span><span id="skip-count" class="stat-val text-green">0</span></div>
+    </div>
+
+    <!-- legend -->
+    <div class="card">
+      <h3>🎨 Legend</h3>
+      <div class="legend-item"><span class="dot dot-intra"></span>Intra — full encode (~2400 bits/block)</div>
+      <div class="legend-item"><span class="dot dot-inter"></span>Inter — motion vector + residual (~15 bits)</div>
+      <div class="legend-item"><span class="dot dot-skip"></span>Skip — copy from previous frame (~1 bit)</div>
+      <div class="legend-item"><span class="dot dot-mv"></span>Motion vector arrow</div>
+    </div>
+
+  </div><!-- end sidebar -->
+</div><!-- end main-stage -->
+</div><!-- end container -->
+
+<script>
+// ==================== CONFIG ====================
+const FRAMES   = 5;
+const MB_SIZE  = 40;
+const COLS     = 10;
+const ROWS     = 6;
+const TOTAL_MB = COLS * ROWS;
+const BIKE_SPEED = 3;
+
+// Thresholds that determine the encoder's decision
+const SKIP_THRESHOLD  = 15;
+const INTER_THRESHOLD = 80;
+
+// ==================== STATE ====================
+let currentFrame = 0;
+let frameData    = [];
+let selectedMb   = null;
+let mbMode       = 'skip';
+let searchAnimating = false;
+
+// ==================== INIT ====================
+function initFrames() {
+  frameData = [];
+  for (let f = 0; f < FRAMES; f++) {
+    frameData.push({
+      type: null, encoded: false,
+      mbs: Array.from({length: TOTAL_MB}, function(_, i) {
+        return {
+          idx: i, col: i % COLS, row: Math.floor(i / COLS),
+          mode: null, mvX: 0, mvY: 0,
+          hasBike: false, hasMotion: false,
+          pixels: generatePixels(i % COLS, Math.floor(i / COLS), f)
+        };
+      }),
+      size: 0
+    });
+  }
+  for (let f = 0; f < FRAMES; f++) {
+    const b = bikeBounds(f);
+    for (let r = b.minRow; r <= b.maxRow; r++) {
+      for (let c = b.minCol; c <= b.maxCol; c++) {
+        const idx = r * COLS + c;
+        if (idx >= 0 && idx < TOTAL_MB) {
+          frameData[f].mbs[idx].hasBike    = true;
+          frameData[f].mbs[idx].hasMotion  = (f > 0);
+        }
+      }
+    }
+  }
+}
+
+function bikeBounds(f) {
+  const offset = f * BIKE_SPEED * 8;
+  const baseX  = 60 + offset;
+  return {
+    minCol: Math.max(0, Math.floor(baseX / MB_SIZE)),
+    maxCol: Math.min(COLS - 1, Math.floor((baseX + 100) / MB_SIZE)),
+    minRow: Math.max(0, Math.floor(95 / MB_SIZE)),
+    maxRow: Math.min(ROWS - 1, Math.floor(195 / MB_SIZE))
+  };
+}
+
+function generatePixels(col, row, f) {
+  const bikeOffX = f * BIKE_SPEED * 8;
+  const bikeBaseX = 60 + bikeOffX;
+  const bx = col * MB_SIZE, by = row * MB_SIZE;
+  const inBike = bx < bikeBaseX + 100 && bx + MB_SIZE > bikeBaseX && by < 195 && by + MB_SIZE > 95;
+  const vals = [];
+  for (let py = 0; py < 4; py++) {
+    for (let px = 0; px < 4; px++) {
+      let v;
+      if (row < 3)      v = 42  + Math.round(Math.random() * 12);
+      else if (row ===3) v = 35 + Math.round(Math.random() * 18);
+      else               v = 52 + Math.round(Math.random() * 14);
+      if (inBike) {
+        const lx = bx + px * 10, ly = by + py * 10;
+        const d1 = Math.sqrt(Math.pow(lx-(bikeBaseX+15),2) + Math.pow(ly-175,2));
+        const d2 = Math.sqrt(Math.pow(lx-(bikeBaseX+70),2) + Math.pow(ly-175,2));
+        if (d1 < 18 || d2 < 18)                                              v = 195 + Math.round(Math.random()*18);
+        else if (ly>140 && ly<175 && lx>bikeBaseX+20 && lx<bikeBaseX+65)    v = 178 + Math.round(Math.random()*25);
+        else if (ly>100 && ly<140 && lx>bikeBaseX+30 && lx<bikeBaseX+55)    v = 158 + Math.round(Math.random()*22);
+      }
+      vals.push(Math.round(v));
+    }
+  }
+  return vals;
+}
+
+function diffScore(a, b) {
+  let s = 0;
+  for (let i = 0; i < 16; i++) s += Math.abs(a[i] - b[i]);
+  return s;
+}
+
+// ==================== LOGGING ====================
+function log(msg, type) {
+  const el = document.getElementById('encoder-log');
+  const d  = document.createElement('div');
+  d.className = 'log-entry log-' + (type || '');
+  d.textContent = '[F' + (currentFrame + 1) + '] ' + msg;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+
+function showAha(text) {
+  const b = document.getElementById('aha-banner');
+  document.getElementById('aha-text').textContent = text;
+  b.classList.add('show');
+  setTimeout(function() { b.classList.remove('show'); }, 12000);
+}
+
+function updateStats() {
+  let total = 0, iC = 0, pC = 0, bC = 0, sk = 0;
+  frameData.forEach(function(f) {
+    if (!f.encoded) return;
+    total += f.size;
+    if (f.type==='I') iC++;
+    if (f.type==='P') pC++;
+    if (f.type==='B') bC++;
+    sk += f.mbs.filter(function(m){ return m.mode==='skip'; }).length;
+  });
+  const raw  = (currentFrame + 1) * 400 * 240 * 24;
+  const comp = raw > 0 ? Math.round((1 - total / raw) * 100) : 0;
+  document.getElementById('total-size').textContent  = total.toLocaleString() + ' bits';
+  document.getElementById('compression').textContent = comp + '%';
+  document.getElementById('i-count').textContent     = iC;
+  document.getElementById('p-count').textContent     = pC;
+  document.getElementById('b-count').textContent     = bC;
+  document.getElementById('skip-count').textContent  = sk;
+}
+
+// ==================== DRAW ====================
+function drawMacroblocks() {
+  const ov = document.getElementById('mb-overlay');
+  ov.innerHTML = '';
+  const fd = frameData[currentFrame];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const idx  = r * COLS + c;
+      const mb   = fd.mbs[idx];
+      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      rect.setAttribute('x', c * MB_SIZE);
+      rect.setAttribute('y', r * MB_SIZE);
+      rect.setAttribute('width',  MB_SIZE);
+      rect.setAttribute('height', MB_SIZE);
+      rect.setAttribute('class','macroblock');
+      if (fd.encoded && mb.mode) {
+        if (mb.mode==='intra') rect.classList.add('mb-intra');
+        else if (mb.mode==='inter') rect.classList.add('mb-inter');
+        else if (mb.mode==='skip')  rect.classList.add('mb-skip');
+      }
+      rect.addEventListener('click',      function(){ selectMb(idx); });
+      rect.addEventListener('mouseenter', function(){ onHoverMb(idx); });
+      ov.appendChild(rect);
+    }
+  }
+}
+
+function drawMotionVectors() {
+  const ov = document.getElementById('mv-overlay');
+  ov.innerHTML = '';
+  const fd = frameData[currentFrame];
+  if (!fd.encoded || (fd.type!=='P' && fd.type!=='B')) return;
+  fd.mbs.forEach(function(mb) {
+    if (mb.mode==='inter' && (mb.mvX!==0 || mb.mvY!==0)) {
+      const cx = mb.col * MB_SIZE + MB_SIZE/2;
+      const cy = mb.row * MB_SIZE + MB_SIZE/2;
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1', cx);
+      line.setAttribute('y1', cy);
+      line.setAttribute('x2', cx + mb.mvX * 3);
+      line.setAttribute('y2', cy + mb.mvY * 3);
+      line.setAttribute('class','motion-vector');
+      const t = document.createElementNS('http://www.w3.org/2000/svg','title');
+      const dir = mb.mvX < 0 ? Math.abs(mb.mvX).toFixed(1)+'px left' : mb.mvX.toFixed(1)+'px right';
+      t.textContent = 'This block came from '+dir+' in the previous frame. The encoder stores that direction instead of re-encoding all the pixels.';
+      line.appendChild(t);
+      ov.appendChild(line);
+    }
+  });
+}
+
+function moveBike(f) {
+  document.getElementById('bicycle').setAttribute('transform','translate('+(f*BIKE_SPEED*8)+',0)');
+}
+
+// ==================== HOVER ON MB ====================
+function onHoverMb(idx) {
+  const fd   = frameData[currentFrame];
+  const mb   = fd.mbs[idx];
+  const prev = currentFrame > 0 ? frameData[currentFrame-1].mbs[idx] : null;
+
+  showPixelInspector(idx);
+
+  if (document.getElementById('search-panel').style.display !== 'none') {
+    showMotionEstimation(mb, prev);
+  }
+
+  if (document.getElementById('mb-panel').style.display !== 'none') {
+    showMbInfo(idx);
+  }
+}
+
+function showPixelInspector(idx) {
+  const fd   = frameData[currentFrame];
+  const mb   = fd.mbs[idx];
+  const prev = currentFrame > 0 ? frameData[currentFrame-1].mbs[idx] : null;
+
+  const cg = document.getElementById('curr-pixel-grid');
+  const pg = document.getElementById('prev-pixel-grid');
+  cg.innerHTML = ''; pg.innerHTML = '';
+
+  mb.pixels.forEach(function(v) {
+    const d = document.createElement('div');
+    d.className = 'pixel-cell';
+    d.style.background = 'rgb('+v+','+v+','+v+')';
+    d.style.color = v > 150 ? '#000' : '#fff';
+    d.textContent = v;
+    cg.appendChild(d);
+  });
+
+  if (prev) {
+    prev.pixels.forEach(function(v) {
+      const d = document.createElement('div');
+      d.className = 'pixel-cell';
+      d.style.background = 'rgb('+v+','+v+','+v+')';
+      d.style.color = v > 150 ? '#000' : '#fff';
+      d.textContent = v;
+      pg.appendChild(d);
+    });
+    const score = diffScore(mb.pixels, prev.pixels);
+    const avgDiff = (score/16).toFixed(1);
+    const col = score > SKIP_THRESHOLD ? '#ef4444' : '#22c55e';
+    document.getElementById('pixel-diff-label').innerHTML =
+      'Avg difference per pixel: <strong style="color:'+col+'">'+avgDiff+'</strong> — '+
+      (score <= SKIP_THRESHOLD ? 'Nearly identical → SKIP candidate' :
+       score <= INTER_THRESHOLD ? 'Changed but findable → INTER candidate' :
+       'Too different → likely needs INTRA');
+  } else {
+    for (let i=0;i<16;i++) {
+      const d = document.createElement('div');
+      d.className='pixel-cell';
+      d.style.background='#1e293b'; d.style.color='#475569';
+      d.textContent='—'; pg.appendChild(d);
+    }
+    document.getElementById('pixel-diff-label').textContent = 'No previous frame — I-frame encodes every block from scratch';
+  }
+}
+
+// ==================== MOTION ESTIMATION PANEL ====================
+function showMotionEstimation(mb, prev) {
+  const prevG = document.getElementById('me-prev-grid');
+  const currG = document.getElementById('me-curr-grid');
+  const diffG = document.getElementById('me-diff-grid');
+  prevG.innerHTML=''; currG.innerHTML=''; diffG.innerHTML='';
+
+  if (!prev) {
+    document.getElementById('me-explanation').textContent = 'No previous frame available — this is an I-frame. All blocks encoded independently.';
+    document.getElementById('me-verdict').style.display = 'none';
+    document.getElementById('me-score-fill').style.width = '0%';
+    document.getElementById('me-score-val').textContent = '—';
+    return;
+  }
+
+  const diffs = [];
+  for (let i=0;i<16;i++) {
+    diffs.push(Math.abs(mb.pixels[i] - prev.pixels[i]));
+  }
+  const totalScore = diffs.reduce(function(a,b){return a+b;},0);
+  const maxPossible = 255 * 16;
+
+  prev.pixels.forEach(function(v) {
+    const d = document.createElement('div');
+    d.className='me-pixel';
+    d.style.background='rgb('+v+','+v+','+v+')';
+    d.style.color = v>150?'#000':'#fff';
+    d.textContent=v; prevG.appendChild(d);
+  });
+
+  mb.pixels.forEach(function(v) {
+    const d = document.createElement('div');
+    d.className='me-pixel';
+    d.style.background='rgb('+v+','+v+','+v+')';
+    d.style.color = v>150?'#000':'#fff';
+    d.textContent=v; currG.appendChild(d);
+  });
+
+  diffs.forEach(function(v) {
+    const d = document.createElement('div');
+    d.className='me-diff-cell';
+    d.style.background = v === 0 ? '#0d1117' : 'rgba(239,68,68,'+(v/120).toFixed(2)+')';
+    d.style.color = v > 60 ? '#fff' : '#94a3b8';
+    d.textContent = v; diffG.appendChild(d);
+  });
+
+  const pct = Math.min(100, (totalScore / maxPossible) * 100 * 4);
+  document.getElementById('me-score-val').textContent = totalScore;
+  const fill = document.getElementById('me-score-fill');
+  fill.style.width = pct + '%';
+  fill.style.background = totalScore <= SKIP_THRESHOLD ? '#22c55e' : totalScore <= INTER_THRESHOLD ? '#3b82f6' : '#ef4444';
+
+  const verdict  = document.getElementById('me-verdict');
+  const explain  = document.getElementById('me-explanation');
+  verdict.style.display = 'block';
+
+  if (totalScore <= SKIP_THRESHOLD) {
+    verdict.className = 'me-verdict skip';
+    verdict.textContent = '✓ SKIP — numbers are nearly identical';
+    explain.innerHTML =
+      'Total diff = <strong>'+totalScore+'</strong> across 16 pixels (avg '+( totalScore/16).toFixed(1)+' per pixel). '+
+      'This is below the skip threshold ('+SKIP_THRESHOLD+'). '+
+      'The encoder says: <em>"These numbers are so close I can just copy the block from the previous frame."</em> '+
+      'Cost: <strong style="color:#4ade80">~1 bit</strong>. No motion vector needed.';
+  } else if (totalScore <= INTER_THRESHOLD) {
+    verdict.className = 'me-verdict inter';
+    verdict.textContent = '→ INTER — block moved, use motion vector';
+    const mvPx = Math.round(BIKE_SPEED * 8);
+    explain.innerHTML =
+      'Total diff = <strong>'+totalScore+'</strong>. Changed, but the encoder searches the previous frame '+
+      'and finds a very similar block shifted <strong>'+mvPx+'px to the right</strong>. '+
+      'So instead of re-encoding all 16 pixels, it stores: '+
+      '<em>"take previous block, shift right '+mvPx+'px"</em> (the motion vector) '+
+      'plus the tiny leftover error (the residual). '+
+      'Cost: <strong style="color:#60a5fa">~15 bits</strong> vs ~2400 bits for a full encode.';
+  } else {
+    verdict.className = 'me-verdict intra';
+    verdict.textContent = '✗ INTRA — too different, full re-encode';
+    explain.innerHTML =
+      'Total diff = <strong>'+totalScore+'</strong>. The encoder searched the reference frame but '+
+      'no nearby block is a good match. Prediction would leave a large residual, which would cost almost as much '+
+      'as encoding fresh. So the encoder gives up on prediction and encodes this block independently — like a JPEG tile. '+
+      'Cost: <strong style="color:#f87171">~2400 bits</strong>.';
+  }
+}
+
+// ==================== MB INTERACTION ====================
+function selectMb(idx) {
+  if (!frameData[currentFrame].encoded) return;
+  if (frameData[currentFrame].type === 'I') {
+    log('I-frame: all blocks must be INTRA. Cannot change individual blocks.', 'i');
+    return;
+  }
+  const mb   = frameData[currentFrame].mbs[idx];
+  const prev = currentFrame > 0 ? frameData[currentFrame-1].mbs[idx] : null;
+  const score = prev ? diffScore(mb.pixels, prev.pixels) : 999;
+
+  if (mbMode === 'skip') {
+    if (score > SKIP_THRESHOLD) {
+      log('MB['+mb.col+','+mb.row+']: forced SKIP even though diff='+score+' (above threshold '+SKIP_THRESHOLD+'). Decoder will show wrong pixels — this is how artifacts happen.', 'warn');
+    } else {
+      log('MB['+mb.col+','+mb.row+']: SKIP — diff='+score+', below threshold. Copy from previous frame. ~1 bit.', 'skip');
+    }
+    mb.mode='skip'; mb.mvX=0; mb.mvY=0;
+  } else if (mbMode === 'inter') {
+    const mvPx = Math.round(BIKE_SPEED * 8);
+    mb.mode='inter';
+    mb.mvX = mb.hasMotion ? -(BIKE_SPEED*8/MB_SIZE) : 0;
+    mb.mvY = 0;
+    log('MB['+mb.col+','+mb.row+']: INTER — encoder found block '+mvPx+'px right in prev frame. MV + residual. ~15 bits.', 'p');
+  } else if (mbMode === 'intra') {
+    mb.mode='intra'; mb.mvX=0; mb.mvY=0;
+    log('MB['+mb.col+','+mb.row+']: INTRA — no good match. Fresh encode. ~'+Math.round(MB_SIZE*MB_SIZE*1.5)+' bits.', 'i');
+  }
+  recalcFrameSize();
+  drawMacroblocks();
+  drawMotionVectors();
+  updateStats();
+}
+
+function setMbMode(mode) {
+  mbMode = mode;
+  const names = {skip:'SKIP',inter:'INTER',intra:'INTRA'};
+  log('Mode set to '+names[mode]+'. Now click any macroblock to apply.');
+  document.getElementById('mb-info').textContent = 'Mode: '+names[mode]+'. Click a block on the canvas.';
+}
+
+function showMbInfo(idx) {
+  const mb   = frameData[currentFrame].mbs[idx];
+  const prev = currentFrame > 0 ? frameData[currentFrame-1].mbs[idx] : null;
+  const score = prev ? diffScore(mb.pixels, prev.pixels) : null;
+  const info  = document.getElementById('mb-info');
+  let txt = 'Block ['+mb.col+', '+mb.row+'] — ';
+  if (!frameData[currentFrame].encoded) {
+    txt += 'not encoded yet.';
+  } else if (mb.mode==='skip') {
+    txt += 'SKIP. Copy from previous frame. ~1 bit.';
+  } else if (mb.mode==='inter') {
+    const dir = mb.mvX < 0 ? Math.abs(mb.mvX).toFixed(1)+'px left' : mb.mvX.toFixed(1)+'px right';
+    txt += 'INTER. Block found '+dir+' in previous frame. ~15 bits.';
+  } else if (mb.mode==='intra') {
+    txt += 'INTRA. Full re-encode. ~'+Math.round(MB_SIZE*MB_SIZE*1.5)+' bits.';
+  }
+  if (score !== null) txt += ' (diff score: '+score+')';
+  if (mb.hasBike) txt += ' 🚲 bicycle pixels';
+  info.textContent = txt;
+}
+
+function autoDecide() {
+  const fd = frameData[currentFrame];
+  if (fd.type!=='P' && fd.type!=='B') return;
+  let skipC=0, interC=0, intraC=0;
+  fd.mbs.forEach(function(mb) {
+    const prev = currentFrame > 0 ? frameData[currentFrame-1].mbs[mb.idx] : null;
+    const score = prev ? diffScore(mb.pixels, prev.pixels) : 999;
+    if (score <= SKIP_THRESHOLD) {
+      mb.mode='skip'; mb.mvX=0; mb.mvY=0; skipC++;
+    } else if (score <= INTER_THRESHOLD || mb.hasBike) {
+      mb.mode='inter';
+      mb.mvX = mb.hasMotion ? -(BIKE_SPEED*8/MB_SIZE) : 0;
+      mb.mvY = 0; interC++;
+    } else {
+      mb.mode='intra'; mb.mvX=0; mb.mvY=0; intraC++;
+    }
+  });
+  log('AUTO: '+skipC+' blocks SKIP (diff ≤'+SKIP_THRESHOLD+'), '+interC+' INTER (motion found), '+intraC+' INTRA (too different).', 'p');
+  recalcFrameSize(); drawMacroblocks(); drawMotionVectors(); updateStats();
+}
+
+// ==================== FRAME SIZE ====================
+function recalcFrameSize() {
+  const fd = frameData[currentFrame];
+  let size = 0;
+  if (fd.type==='I') {
+    size = TOTAL_MB * MB_SIZE * MB_SIZE * 1.5;
+  } else {
+    const interCost = fd.type==='B' ? 18 : 15;
+    fd.mbs.forEach(function(mb) {
+      if      (mb.mode==='skip')  size += 1;
+      else if (mb.mode==='inter') size += interCost;
+      else if (mb.mode==='intra') size += MB_SIZE * MB_SIZE * 1.5;
+    });
+  }
+  fd.size = Math.round(size);
+  document.getElementById('frame-size').textContent = fd.size.toLocaleString() + ' bits';
+}
+
+// ==================== ENCODE ACTIONS ====================
+function encodeIFrame() {
+  const fd = frameData[currentFrame];
+  fd.type='I'; fd.encoded=true;
+  fd.mbs.forEach(function(mb){ mb.mode='intra'; mb.mvX=0; mb.mvY=0; });
+  recalcFrameSize();
+  document.getElementById('frame-type-badge').textContent = 'I-FRAME (Intra-coded)';
+  document.getElementById('frame-type-badge').className   = 'badge badge-i';
+  log('I-FRAME encoded. Every block compressed independently. No references. Like JPEG.', 'i');
+  log('Frame size: '+fd.size.toLocaleString()+' bits ('+( fd.size/8/1024).toFixed(1)+' KB)', 'i');
+  showAha('An I-frame is essentially a JPEG. The encoder sees only numbers — no trees, no bicycle, no sky. It compresses each block independently: transform the pixel values, reduce precision, encode compactly. No previous frame is referenced. This is why I-frames are large but self-contained — and why seeking in a video always snaps to an I-frame.');
+  updateThumb(currentFrame,'I','red');
+  drawMacroblocks(); updateStats(); updateStepTrack(1);
+  document.getElementById('pixel-panel').style.display = 'block';
+  setTimeout(function(){ if(currentFrame < FRAMES-1) setupNextFrame(); }, 600);
+}
+
+function encodePFrame() {
+  const fd = frameData[currentFrame];
+  fd.type='P'; fd.encoded=true;
+  fd.mbs.forEach(function(mb) {
+    const prev  = frameData[currentFrame-1].mbs[mb.idx];
+    const score = diffScore(mb.pixels, prev.pixels);
+    if (score <= SKIP_THRESHOLD) {
+      mb.mode='skip'; mb.mvX=0; mb.mvY=0;
+    } else if (mb.hasBike || score <= INTER_THRESHOLD) {
+      mb.mode='inter';
+      mb.mvX = mb.hasMotion ? -(BIKE_SPEED*8/MB_SIZE) : 0;
+      mb.mvY=0;
+    } else {
+      mb.mode='intra'; mb.mvX=0; mb.mvY=0;
+    }
+  });
+  recalcFrameSize();
+  document.getElementById('frame-type-badge').textContent = 'P-FRAME (Predicted)';
+  document.getElementById('frame-type-badge').className   = 'badge badge-p';
+  const savings = Math.round((1 - fd.size / frameData[0].size) * 100);
+  log('P-FRAME encoded. References previous frame.', 'p');
+  log('Size: '+fd.size.toLocaleString()+' bits — '+savings+'% smaller than the I-frame.', 'p');
+  log('Background blocks: diff score ≤'+SKIP_THRESHOLD+' → SKIP. Bike blocks: diff high but match found → INTER + MV.', 'p');
+  log('Residual: after applying the MV, the leftover error is tiny. Only the residual + MV are stored.', 'p');
+  showAha('The encoder compared every block numerically with the previous frame. Background: "Pixel numbers almost identical — SKIP, just 1 bit." Bike block: "Numbers changed, but found a shifted match — store motion vector + tiny residual." Result: '+savings+'% smaller than an I-frame with almost the same visual quality.');
+  updateThumb(currentFrame,'P','blue');
+  drawMacroblocks(); drawMotionVectors(); updateStats(); updateStepTrack(2);
+  document.getElementById('mb-panel').style.display    = 'block';
+  document.getElementById('search-panel').style.display = 'block';
+  document.getElementById('decision-prompt').textContent = 'P-frame encoded. Hover blocks to see the encoder\'s comparison. Click a block to manually override its mode. Experiment — then move to the next frame.';
+  document.getElementById('decision-buttons').innerHTML =
+    '<button onclick="nextFrame()" class="btn btn-slate">NEXT FRAME →</button>'+
+    '<button onclick="autoDecide()" class="btn btn-purple">RE-AUTO</button>';
+}
+
+function encodeBFrame() {
+  const fd = frameData[currentFrame];
+  fd.type='B'; fd.encoded=true;
+  fd.mbs.forEach(function(mb) {
+    const prev  = frameData[currentFrame-1].mbs[mb.idx];
+    const score = diffScore(mb.pixels, prev.pixels);
+    if (score <= SKIP_THRESHOLD) {
+      mb.mode='skip'; mb.mvX=0; mb.mvY=0;
+    } else {
+      mb.mode='inter';
+      mb.mvX = mb.hasMotion ? -(BIKE_SPEED*8/MB_SIZE) : 0;
+      mb.mvY=0;
+    }
+  });
+  recalcFrameSize();
+  document.getElementById('frame-type-badge').textContent = 'B-FRAME (Bi-predicted)';
+  document.getElementById('frame-type-badge').className   = 'badge badge-b';
+  const savings = Math.round((1 - fd.size / frameData[0].size) * 100);
+  log('B-FRAME encoded. Uses BOTH previous AND next frames as reference.', 'b');
+  log('Size: '+fd.size.toLocaleString()+' bits — '+savings+'% smaller than I-frame.', 'b');
+  log('Each inter block stores TWO motion vectors (one forward, one backward) — but better prediction = smaller residual.', 'b');
+  log('⚠ Transmission order: this B-frame is sent AFTER the next P-frame. Decoder reorders before display. Adds latency — avoid in live streams.', 'warn');
+  showAha('B-frames predict from BOTH past and future frames — available only in offline encoding where the encoder has already seen future frames. Each inter block costs slightly more (two motion vectors) but the prediction is so much better that the residual is tiny. Net result: usually the smallest frame type. But: the decoder must buffer and reorder frames, adding latency. This is why live broadcast avoids B-frames.');
+  updateThumb(currentFrame,'B','purple');
+  drawMacroblocks(); drawMotionVectors(); updateStats(); updateStepTrack(3);
+  document.getElementById('mb-panel').style.display    = 'block';
+  document.getElementById('search-panel').style.display = 'block';
+  document.getElementById('decision-prompt').textContent = 'B-frame encoded. Hover blocks to see the comparison. Then move to next frame.';
+  document.getElementById('decision-buttons').innerHTML =
+    '<button onclick="nextFrame()" class="btn btn-slate">NEXT FRAME →</button>'+
+    '<button onclick="autoDecide()" class="btn btn-purple">RE-AUTO</button>';
+}
+
+function setupNextFrame() {
+  currentFrame++;
+  document.getElementById('frame-num').textContent = currentFrame + 1;
+  moveBike(currentFrame);
+  document.getElementById('search-overlay').innerHTML = '';
+  document.getElementById('mb-panel').style.display    = 'none';
+  document.getElementById('search-panel').style.display = 'none';
+  drawMacroblocks();
+  document.getElementById('mv-overlay').innerHTML = '';
+
+  const isLast = (currentFrame === FRAMES - 1);
+  const bNote  = isLast
+    ? ' B-frame is unavailable here — it needs a future reference frame, but this is the last frame.'
+    : ' B-frame = cheapest. Predicts from BOTH past AND future (offline encoding only).';
+  document.getElementById('decision-prompt').textContent =
+    'Frame '+(currentFrame+1)+': choose frame type. I-frame = large, self-contained. P-frame = small, references past.'+bNote;
+
+  let btns = '<button onclick="encodeIFrame()" class="btn btn-red">I-FRAME</button>'+
+             '<button onclick="encodePFrame()" class="btn btn-blue">P-FRAME</button>';
+  if (!isLast) btns += '<button onclick="encodeBFrame()" class="btn btn-purple">B-FRAME</button>';
+  else         btns += '<button disabled class="btn btn-purple" title="B-frames need a future reference — not available on the last frame">B-FRAME ✗</button>';
+  document.getElementById('decision-buttons').innerHTML = btns;
+  log('--- Frame '+(currentFrame+1)+' ready. Choose frame type ---');
+}
+
+function nextFrame() {
+  if (currentFrame < FRAMES-1) setupNextFrame();
+  else finishEncoding();
+}
+
+function finishEncoding() {
+  document.getElementById('decision-prompt').textContent =
+    'All 5 frames encoded! Restart and try different sequences: all I-frames (largest, always seekable), '+
+    'I-P-P-P-P (good compression, low latency), I-B-B-P-B-B-P (best compression, higher latency, not for live).';
+  document.getElementById('decision-buttons').innerHTML =
+    '<button onclick="resetSim()" class="btn btn-slate">↺ Restart</button>';
+  let total = 0;
+  frameData.forEach(function(f){ total += f.size; });
+  const raw   = FRAMES * 400 * 240 * 24;
+  const saved = raw - total;
+  log('=== ENCODING COMPLETE ===', 'p');
+  log('Total: '+total.toLocaleString()+' bits ('+( total/8/1024).toFixed(1)+' KB)', 'p');
+  log('Raw uncompressed: '+raw.toLocaleString()+' bits ('+( raw/8/1024).toFixed(1)+' KB)', 'i');
+  log('Saved: '+(saved/8/1024).toFixed(1)+' KB ('+Math.round(saved/raw*100)+'%)', 'skip');
+  showAha('You just experienced what an encoder does 24–60 times per second. It never knows what a bicycle is. It compares grids of numbers, searches for matching regions, stores the smallest mathematical description. That is video compression.');
+}
+
+function resetSim() {
+  currentFrame = 0;
+  initFrames();
+  document.getElementById('encoder-log').innerHTML = '<div class="log-entry">Simulation restarted. Click ENCODE I-FRAME to begin.</div>';
+  document.getElementById('frame-size').textContent  = '0 bits';
+  document.getElementById('total-size').textContent  = '0 bits';
+  document.getElementById('compression').textContent = '0%';
+  document.getElementById('i-count').textContent     = '0';
+  document.getElementById('p-count').textContent     = '0';
+  document.getElementById('b-count').textContent     = '0';
+  document.getElementById('skip-count').textContent  = '0';
+  document.querySelectorAll('.thumb').forEach(function(el,i){
+    el.textContent = i===0?'I':'?';
+    el.className   = 'thumb'+(i===0?' active-red':'');
+  });
+  moveBike(0);
+  document.getElementById('frame-num').textContent          = '1';
+  document.getElementById('frame-type-badge').textContent   = 'I-FRAME (Intra-coded)';
+  document.getElementById('frame-type-badge').className     = 'badge badge-i';
+  document.getElementById('decision-prompt').textContent    = 'Frame 1 must be an I-frame. There is no previous frame to reference. Every block will be intra-coded independently — like JPEG.';
+  document.getElementById('decision-buttons').innerHTML     = '<button onclick="encodeIFrame()" class="btn btn-red">ENCODE I-FRAME</button>';
+  document.getElementById('mb-panel').style.display         = 'none';
+  document.getElementById('search-panel').style.display     = 'none';
+  document.getElementById('pixel-panel').style.display      = 'none';
+  document.getElementById('search-overlay').innerHTML       = '';
+  document.getElementById('aha-banner').classList.remove('show');
+  updateStepTrack(0);
+  drawMacroblocks();
+}
+
+function updateThumb(idx, text, color) {
+  document.querySelectorAll('.thumb')[idx].textContent = text;
+  document.querySelectorAll('.thumb')[idx].className   = 'thumb active-'+color;
+}
+
+function jumpToFrame(idx) {
+  if (idx > currentFrame && !frameData[idx].encoded) {
+    log('Cannot jump to an unencoded future frame.', 'warn'); return;
+  }
+  currentFrame = idx;
+  document.getElementById('frame-num').textContent = idx + 1;
+  moveBike(idx);
+  document.getElementById('search-overlay').innerHTML = '';
+  const fd = frameData[idx];
+  if (fd.encoded) {
+    const badges = {I:'badge-i',P:'badge-p',B:'badge-b'};
+    const names  = {I:'I-FRAME (Intra-coded)',P:'P-FRAME (Predicted)',B:'B-FRAME (Bi-predicted)'};
+    document.getElementById('frame-type-badge').textContent = names[fd.type];
+    document.getElementById('frame-type-badge').className   = 'badge '+badges[fd.type];
+    document.getElementById('frame-size').textContent       = fd.size.toLocaleString()+' bits';
+    const isInterFrame = fd.type==='P' || fd.type==='B';
+    document.getElementById('mb-panel').style.display    = isInterFrame ? 'block' : 'none';
+    document.getElementById('search-panel').style.display = isInterFrame ? 'block' : 'none';
+    document.getElementById('decision-prompt').textContent  = isInterFrame
+      ? 'Viewing '+fd.type+'-frame. Hover blocks to compare with previous frame. Click to override mode.'
+      : 'Viewing I-frame. All blocks INTRA-encoded. Hover to see raw pixel numbers.';
+    document.getElementById('decision-buttons').innerHTML = isInterFrame
+      ? '<button onclick="nextFrame()" class="btn btn-slate">NEXT FRAME →</button><button onclick="autoDecide()" class="btn btn-purple">RE-AUTO</button>'
+      : '<button onclick="nextFrame()" class="btn btn-slate">NEXT FRAME →</button>';
+  } else {
+    document.getElementById('frame-type-badge').textContent = 'NOT ENCODED';
+    document.getElementById('frame-type-badge').className   = 'badge badge-none';
+    document.getElementById('frame-size').textContent       = '0 bits';
+    document.getElementById('mb-panel').style.display       = 'none';
+    document.getElementById('search-panel').style.display   = 'none';
+  }
+  drawMacroblocks(); drawMotionVectors();
+}
+
+function updateStepTrack(step) {
+  document.querySelectorAll('.step-dot').forEach(function(d,i){
+    d.className = 'step-dot'+(i<step?' done':i===step?' active':'');
+  });
+}
+
+// ==================== STARTUP ====================
+initFrames();
+drawMacroblocks();
+moveBike(0);
+</script>
+</body>
+</html>
